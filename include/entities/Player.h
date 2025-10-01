@@ -9,6 +9,7 @@ public:
     Player(const std::string name);
 
     int getDamage() const override;
+    std::string ClassToString() const;
 public:
     // Weapon weapon;
     // int lvlRouge = 0;

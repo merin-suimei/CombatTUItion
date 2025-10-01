@@ -25,3 +25,9 @@ int Player::getDamage() const
     //Placeholder
     return 3; // return weapon.dmg;
 }
+
+std::string Player::ClassToString() const
+{
+    // Placeholder
+    return "No class";
+}

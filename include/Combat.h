@@ -1,11 +1,12 @@
 #pragma once
 
-#include "entities/Contender.h"
+#include "entities/Monster.h"
+#include "entities/Player.h"
 #include "EncounterLog.h"
 
 namespace Combat
 {
     EncounterLog simulateEncounter(
-        const Contender *contender1, const Contender *contender2);
+        const Player *player, const Monster *monster);
     Attack calculateDamage(const Contender *source, const Contender *target);
 }

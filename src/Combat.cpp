@@ -5,15 +5,13 @@
 #define MAX_TURNS 99
 
 // Crude early implementation
-EncounterLog Combat::simulateEncounter(const Contender *contender1,
-    const Contender *contender2)
+EncounterLog Combat::simulateEncounter(
+    const Player *player, const Monster *monster)
 {
-    EncounterLog log;
-    log.contender1 = contender1;
-    log.contender2 = contender2;
+    EncounterLog log{.player = player, .monster = monster};
 
-    int currentHPContender1 = contender1->hp;
-    int currentHPContender2 = contender2->hp;
+    int currentHPPlayer = player->hp;
+    int currentHPMonster = monster->hp;
 
     // Simulate encounter turn by turn
     while (true)
@@ -24,17 +22,17 @@ EncounterLog Combat::simulateEncounter(const Contender *contender1,
             break;
         }
         
-        log.attacks.push_back(calculateDamage(contender1, contender2));
-        currentHPContender2 -= log.attacks.back().dmg;
-        if (currentHPContender2 <= 0)
+        log.attacks.push_back(calculateDamage(player, monster));
+        currentHPMonster -= log.attacks.back().dmg;
+        if (currentHPMonster <= 0)
         {
             log.outcome = PlayerWon;
             break;
         }
 
-        log.attacks.push_back(calculateDamage(contender2, contender1));
-        currentHPContender1 -= log.attacks.back().dmg;
-        if (currentHPContender1 <= 0)
+        log.attacks.push_back(calculateDamage(monster, player));
+        currentHPPlayer -= log.attacks.back().dmg;
+        if (currentHPPlayer <= 0)
         {
             log.outcome = PlayerLost;
             break;

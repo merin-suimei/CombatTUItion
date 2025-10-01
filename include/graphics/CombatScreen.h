@@ -10,7 +10,6 @@ class CombatScreen : public Redrawable
 private:
     CombatScreen(const EncounterLog log);
     std::vector<std::string> FormatPlayerStats();
-    std::string FormatPlayerClass();
     std::vector<std::string> FormatMonsterStats();
 private:
     EncounterLog log;
