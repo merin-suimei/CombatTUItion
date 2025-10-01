@@ -1,0 +1,9 @@
+# Build Directory
+build/*
+
+# Ignore VS Code config
+.vscode/*
+
+# Testing
+misc/*
+resources/*
