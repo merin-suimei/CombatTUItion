@@ -1,13 +1,15 @@
 #include "entities/Monster.h"
 
 //Temp before lookup table
-Monster::Monster() : type(Goblin), dmg(2)
+Monster::Monster(std::string name, int hp, int dmg, int str, int agi, int end)
 {
-    name = "Goblin";
-    hp = 5;
-    str = 1;
-    agi = 1;
-    end = 1;
+    this->name = name;
+    this->hp = hp;
+    this->dmg = dmg;
+
+    this->str = str;
+    this->agi = agi;
+    this->end = end;
 }
 
 int Monster::getDamage() const
