@@ -133,7 +133,7 @@ void CombatScreen::Open()
 
         mvwprintw(damageMonster, 0, 0, std::format("{}",
             playerAttack->flag != Miss ? std::to_string(-playerAttack->dmg) :
-                                        "Miss").c_str());
+                                         "Miss").c_str());
         wrefresh(damageMonster);
 
         wtimeout(controls, HALFTURN_DELAY_MS);
@@ -160,7 +160,7 @@ void CombatScreen::Open()
 
         mvwprintw(damagePlayer, 0, 0, std::format("{}",
             monsterAttack->flag != Miss ? std::to_string(-monsterAttack->dmg) :
-                                        "Miss").c_str());
+                                          "Miss").c_str());
         wrefresh(damagePlayer);
 
         wtimeout(controls, TURN_DELAY_MS);
