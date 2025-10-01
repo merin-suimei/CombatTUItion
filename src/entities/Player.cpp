@@ -7,7 +7,10 @@ using String = std::string;
 Player::Player(const std::string name)
 {
     this->name = name;
-    hp = 5; //Temp before classes
+
+    //Temp before classes
+    hp = 5;
+    weapon = weaponsTable.at(Sword);
 
     // Prepare random
     std::random_device rd;
@@ -22,8 +25,7 @@ Player::Player(const std::string name)
 
 int Player::getDamage() const
 {
-    //Placeholder
-    return 3; // return weapon.dmg;
+    return weapon.damage;
 }
 
 std::string Player::ClassToString() const

@@ -7,8 +7,8 @@
 #define COUNTER_WIDTH 12
 #define COUNTER_HORIZONTAL_PAD 2
 
-#define STATUS_HEIGHT 12
-#define STATUS_WIDTH 30
+#define STATUS_HEIGHT 15
+#define STATUS_WIDTH 31
 #define STATUS_VERTICAL_PAD 2
 #define STATUS_HORIZONTAL_PAD 3
 
@@ -249,9 +249,19 @@ void CombatScreen::Redraw()
 
 std::vector<String> CombatScreen::FormatPlayerStats()
 {
+    std::string damageType =
+        log.player->weapon.damageType == Slash    ? "Slash"    :
+        log.player->weapon.damageType == Puncture ? "Puncture" :
+        log.player->weapon.damageType == Impact   ? "Impact"   :
+                                                    "Unknown"  ;
+
     return std::vector<std::string>{
         std::format(" {} ({})", log.player->name, log.player->ClassToString()),
         std::format("HP:   {}/{}", playerCurrentHP, log.player->hp),
+                    "",
+        std::format("Weapon:   {}", log.player->weapon.name),
+        std::format("- Damage type:   {}", damageType),
+        std::format("- Damage:        {}", log.player->weapon.damage),
                     "",
                     "Stats:",
         std::format("- Strength:    {}", log.player->str),

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "entities/Contender.h"
+#include "entities/Weapon.h"
 #include <string>
 
 class Player : public Contender
@@ -11,7 +12,7 @@ public:
     int getDamage() const override;
     std::string ClassToString() const;
 public:
-    // Weapon weapon;
+    Weapon weapon;
     // int lvlRouge = 0;
     // int lvlWarrior = 0;
     // int lvlBarbarian = 0;
