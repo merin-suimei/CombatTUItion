@@ -125,7 +125,7 @@ void CombatScreen::Open()
 
         mvwprintw(statusMonster,
             STATUS_VERTICAL_PAD + MONSTER_HP_LINE - 1, STATUS_HORIZONTAL_PAD,
-            // Extra spaces to overwrive larger numbers
+            // Extra spaces to overwrite larger numbers
             std::format("HP:       {}/{}   ",
                 monsterCurrentHP, log.monster->hp).c_str());
         box(statusMonster, 0, 0);
@@ -152,7 +152,7 @@ void CombatScreen::Open()
 
         mvwprintw(statusPlayer,
             STATUS_VERTICAL_PAD + PLAYER_HP_LINE - 1, STATUS_HORIZONTAL_PAD,
-            // Extra spaces to overwrive larger numbers
+            // Extra spaces to overwrite larger numbers
             std::format("HP:   {}/{}   ",
                 playerCurrentHP, log.player->hp).c_str());
         box(statusPlayer, 0, 0);
