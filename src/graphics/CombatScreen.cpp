@@ -38,8 +38,8 @@ std::shared_ptr<CombatScreen> CombatScreen::Create(const EncounterLog log)
 CombatScreen::CombatScreen(const EncounterLog log)
 {
     this->log = log;
-    playerCurrentHP = log.contender1->hp;
-    monsterCurrentHP = log.contender2->hp;
+    playerCurrentHP = log.player->hp;
+    monsterCurrentHP = log.monster->hp;
 
     // Prepare separator lines
     mvhline(COUNTER_HEIGHT-1, 0, 0, COLS);
@@ -127,7 +127,7 @@ void CombatScreen::Open()
             STATUS_VERTICAL_PAD + MONSTER_HP_LINE - 1, STATUS_HORIZONTAL_PAD,
             // Extra spaces to overwrive larger numbers
             std::format("HP:       {}/{}   ",
-                monsterCurrentHP, log.contender2->hp).c_str());
+                monsterCurrentHP, log.monster->hp).c_str());
         box(statusMonster, 0, 0);
         wrefresh(statusMonster);
 
@@ -154,7 +154,7 @@ void CombatScreen::Open()
             STATUS_VERTICAL_PAD + PLAYER_HP_LINE - 1, STATUS_HORIZONTAL_PAD,
             // Extra spaces to overwrive larger numbers
             std::format("HP:   {}/{}   ",
-                playerCurrentHP, log.contender1->hp).c_str());
+                playerCurrentHP, log.player->hp).c_str());
         box(statusPlayer, 0, 0);
         wrefresh(statusPlayer);
 
@@ -250,32 +250,26 @@ void CombatScreen::Redraw()
 std::vector<String> CombatScreen::FormatPlayerStats()
 {
     return std::vector<std::string>{
-        std::format(" {} ({})", log.contender1->name, FormatPlayerClass()),
-        std::format("HP:   {}/{}", playerCurrentHP, log.contender1->hp),
+        std::format(" {} ({})", log.player->name, log.player->ClassToString()),
+        std::format("HP:   {}/{}", playerCurrentHP, log.player->hp),
                     "",
                     "Stats:",
-        std::format("- Strength:    {}", log.contender1->str),
-        std::format("- Agility:     {}", log.contender1->agi),
-        std::format("- Endurance:   {}", log.contender1->end)
+        std::format("- Strength:    {}", log.player->str),
+        std::format("- Agility:     {}", log.player->agi),
+        std::format("- Endurance:   {}", log.player->end)
     };
-}
-
-String CombatScreen::FormatPlayerClass()
-{
-    //Placeholder
-    return "No class";
 }
 
 std::vector<String> CombatScreen::FormatMonsterStats()
 {
     return std::vector<std::string>{
-        std::format(" {}", log.contender2->name),
-        std::format("HP:       {}/{}", monsterCurrentHP, log.contender2->hp),
-        std::format("Damage:   {}", log.contender2->getDamage()),
+        std::format(" {}", log.monster->name),
+        std::format("HP:       {}/{}", monsterCurrentHP, log.monster->hp),
+        std::format("Damage:   {}", log.monster->dmg),
                     "",
                     "Stats:",
-        std::format("- Strength:    {}", log.contender2->str),
-        std::format("- Agility:     {}", log.contender2->agi),
-        std::format("- Endurance:   {}", log.contender2->end)
+        std::format("- Strength:    {}", log.monster->str),
+        std::format("- Agility:     {}", log.monster->agi),
+        std::format("- Endurance:   {}", log.monster->end)
     };
 }
