@@ -7,12 +7,12 @@
 #define COUNTER_WIDTH 12
 #define COUNTER_HORIZONTAL_PAD 2
 
-#define STATUS_HEIGHT 15
-#define STATUS_WIDTH 31
+#define STATUS_HEIGHT 16
+#define STATUS_WIDTH 37
 #define STATUS_VERTICAL_PAD 2
 #define STATUS_HORIZONTAL_PAD 3
 
-#define PLAYER_HP_LINE 2
+#define PLAYER_HP_LINE 3
 #define MONSTER_HP_LINE 2
 
 #define DAMAGE_SPACING 3
@@ -256,7 +256,8 @@ std::vector<String> CombatScreen::FormatPlayerStats()
                                                     "Unknown"  ;
 
     return std::vector<std::string>{
-        std::format(" {} ({})", log.player->name, log.player->ClassToString()),
+        std::format(" {}", log.player->name),
+        std::format("({})", log.player->ClassToString()),
         std::format("HP:   {}/{}", playerCurrentHP, log.player->hp),
                     "",
         std::format("Weapon:   {}", log.player->weapon.name),

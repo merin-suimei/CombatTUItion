@@ -6,7 +6,7 @@ class Game
 {
 private:
     bool running = false;
-    Player player = Player("Nameless"); // Temp
+    Player player = Player("Nameless", Warrior); // Temp
 
 public:
     Game();
