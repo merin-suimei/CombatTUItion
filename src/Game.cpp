@@ -7,6 +7,7 @@
 #include "Combat.h"
 #include <curses.h>
 #include <format>
+#include <random>
 
 Game::Game()
 {
@@ -23,12 +24,20 @@ Game::~Game()
 
 void Game::Start()
 {
+    // Prepare random
+    std::random_device rd;
+    std::mt19937 gen(rd());
+
+    // Hardcoded (First, Last)
+    std::uniform_int_distribution<> monsterDist(Goblin, Dragon);
+
     running = true;
     while (running)
     {
         {
-            Monster monster = monstersTable.at(Goblin);
+            Monster monster = monstersTable.at(MonsterType(monsterDist(gen)));
             EncounterLog log = Combat::simulateEncounter(&player, &monster);
+
             std::shared_ptr<CombatScreen> window = CombatScreen::Create(log);
             window->Open();
 
