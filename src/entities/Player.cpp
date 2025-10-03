@@ -60,6 +60,9 @@ void Player::applyDefenceSkills(
 
 void Player::LevelUp(PlayerClass playerClass)
 {
+    if (lvlRouge + lvlWarrior + lvlBarbarian >= 3)
+        return;
+
     switch (playerClass)
     {
     case Rouge:
