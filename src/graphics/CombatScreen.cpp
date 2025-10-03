@@ -1,19 +1,26 @@
 #include "graphics/CombatScreen.h"
 
 #include "graphics/WindowManager.h"
+#include "skills/Skill.h"
+#include "Attack.h"
 #include <format>
 
 #define COUNTER_HEIGHT 3
 #define COUNTER_WIDTH 12
 #define COUNTER_HORIZONTAL_PAD 2
 
-#define STATUS_HEIGHT 12
-#define STATUS_WIDTH 30
+#define STATUS_HEIGHT 16
+#define STATUS_WIDTH 37
 #define STATUS_VERTICAL_PAD 2
 #define STATUS_HORIZONTAL_PAD 3
 
-#define PLAYER_HP_LINE 2
+#define PLAYER_HP_LINE 3
 #define MONSTER_HP_LINE 2
+
+#define SKILLS_HEIGH 8
+#define SKILLS_WIDTH 56
+#define SKILLS_VERTICAL_PAD 1
+#define SKILLS_HORIZONTAL_PAD 3
 
 #define DAMAGE_SPACING 3
 #define DAMAGE_HEIGHT 2
@@ -53,17 +60,43 @@ CombatScreen::CombatScreen(const EncounterLog log)
     // Format player status
     statusTextPlayer = FormatPlayerStats();
     statusPlayer = newwin(STATUS_HEIGHT, STATUS_WIDTH,
-        (LINES - STATUS_HEIGHT) / 2, 0);
+        COUNTER_HEIGHT + 1, 0);
     damagePlayer = newwin(DAMAGE_HEIGHT, DAMAGE_WIDTH,
-        (LINES - DAMAGE_HEIGHT) / 2, STATUS_WIDTH+DAMAGE_SPACING);
+        (STATUS_HEIGHT - DAMAGE_HEIGHT) / 2 + COUNTER_HEIGHT,
+        STATUS_WIDTH+DAMAGE_SPACING);
+
+    // Format and fill player skills
+    skillsPlayer = newwin(SKILLS_HEIGH, SKILLS_WIDTH,
+        COUNTER_HEIGHT + STATUS_HEIGHT + 1, 0);
+    for (Skill *skill : log.player->skills)
+    {
+        skillsTextPlayer.push_back(' ' + skill->name);
+        skillsTextPlayer.push_back(skill->description);
+    }
+    wmove(skillsPlayer, SKILLS_VERTICAL_PAD, 0);
+    for (String line : skillsTextPlayer)
+        wprintw(skillsPlayer,
+            (String(SKILLS_HORIZONTAL_PAD, ' ') + line + '\n').c_str());
+    box(skillsPlayer, 0, 0);
 
     // Format monster status
     statusTextMonster = FormatMonsterStats();
     statusMonster = newwin(STATUS_HEIGHT, STATUS_WIDTH,
-        (LINES - STATUS_HEIGHT) / 2, COLS-STATUS_WIDTH);
+        COUNTER_HEIGHT + 1, COLS-STATUS_WIDTH);
     damageMonster = newwin(DAMAGE_HEIGHT, DAMAGE_WIDTH,
-        (LINES - DAMAGE_HEIGHT) / 2,
+        (STATUS_HEIGHT - DAMAGE_HEIGHT) / 2 + COUNTER_HEIGHT,
         COLS-(STATUS_WIDTH+DAMAGE_SPACING+DAMAGE_WIDTH));
+
+    // Format and fill monster skill
+    skillsMonster = newwin(SKILLS_HEIGH, SKILLS_WIDTH,
+        COUNTER_HEIGHT + STATUS_HEIGHT + 1, COLS - SKILLS_WIDTH);
+    skillsTextMonster = {
+        log.monster->skill->name, log.monster->skill->description};
+    wmove(skillsMonster, SKILLS_VERTICAL_PAD, 0);
+    for (String line : skillsTextMonster)
+        wprintw(skillsMonster,
+            (String(SKILLS_HORIZONTAL_PAD, ' ') + line + '\n').c_str());
+    box(skillsMonster, 0, 0);
 
     // Format and fill controls tip
     controlsText = CONTROL_TIP;
@@ -80,9 +113,11 @@ CombatScreen::~CombatScreen()
 
     delwin(statusPlayer);
     delwin(damagePlayer);
+    delwin(skillsPlayer);
 
     delwin(statusMonster);
     delwin(damageMonster);
+    delwin(skillsMonster);
 
     delwin(controls);
 }
@@ -91,6 +126,8 @@ void CombatScreen::Open()
 {
     // Draw static contents
     refresh();
+    wrefresh(skillsPlayer);
+    wrefresh(skillsMonster);
     wrefresh(controls);
 
     // Draw player's initial stats
@@ -181,13 +218,16 @@ void CombatScreen::Redraw()
     // Recenter
     mvwin(counter, 0, (COLS - COUNTER_WIDTH) / 2);
 
-    mvwin(statusPlayer, (LINES - STATUS_HEIGHT) / 2, 0);
-    mvwin(damagePlayer, (LINES - DAMAGE_HEIGHT) / 2,
+    mvwin(statusPlayer, COUNTER_HEIGHT + 1, 0);
+    mvwin(damagePlayer, (STATUS_HEIGHT - DAMAGE_HEIGHT) / 2 + COUNTER_HEIGHT,
         STATUS_WIDTH+DAMAGE_SPACING);
+    mvwin(skillsPlayer, COUNTER_HEIGHT + STATUS_HEIGHT + 1, 0);
 
-    mvwin(statusMonster, (LINES - STATUS_HEIGHT) / 2, COLS-STATUS_WIDTH);
-    mvwin(damageMonster, (LINES - DAMAGE_HEIGHT) / 2,
+    mvwin(statusMonster, COUNTER_HEIGHT + 1, COLS-STATUS_WIDTH);
+    mvwin(damageMonster,  (STATUS_HEIGHT - DAMAGE_HEIGHT) / 2 + COUNTER_HEIGHT,
         COLS-(STATUS_WIDTH+DAMAGE_SPACING+DAMAGE_WIDTH));
+    mvwin(skillsMonster,
+        COUNTER_HEIGHT + STATUS_HEIGHT + 1, COLS - SKILLS_WIDTH);
 
     mvwin(controls, LINES-CONTROLS_HEIGHT, (COLS - controlsText.size()) / 2);
 
@@ -215,6 +255,16 @@ void CombatScreen::Redraw()
     {
         wresize(damagePlayer, DAMAGE_HEIGHT, DAMAGE_WIDTH);
     }
+    if (getmaxx(skillsPlayer) != SKILLS_WIDTH ||
+        getmaxy(skillsPlayer) != SKILLS_HEIGH)
+    {
+        wresize(skillsPlayer, SKILLS_HEIGH, SKILLS_WIDTH);
+        wmove(skillsPlayer, SKILLS_VERTICAL_PAD, 0);
+        for (String line : skillsTextPlayer)
+            wprintw(skillsPlayer,
+                (String(SKILLS_HORIZONTAL_PAD, ' ') + line + '\n').c_str());
+        box(skillsPlayer, 0, 0);
+    }
 
     if (getmaxx(statusMonster) != STATUS_WIDTH ||
         getmaxy(statusMonster) != STATUS_HEIGHT)
@@ -231,6 +281,16 @@ void CombatScreen::Redraw()
     {
         wresize(damageMonster, DAMAGE_HEIGHT, DAMAGE_WIDTH);
     }
+    if (getmaxx(skillsMonster) != SKILLS_WIDTH ||
+        getmaxy(skillsMonster) != SKILLS_HEIGH)
+    {
+        wresize(skillsMonster, SKILLS_HEIGH, SKILLS_WIDTH);
+        wmove(skillsMonster, SKILLS_VERTICAL_PAD, 0);
+        for (String line : skillsTextMonster)
+            wprintw(skillsMonster,
+                (String(SKILLS_HORIZONTAL_PAD, ' ') + line + '\n').c_str());
+        box(skillsMonster, 0, 0);
+    }
 
     if (getmaxx(controls) != controlsWidth ||
         getmaxy(controls) != CONTROLS_HEIGHT)
@@ -242,16 +302,32 @@ void CombatScreen::Redraw()
 
     // Draw everything
     wrefresh(counter);
+
     wrefresh(statusPlayer);
+    wrefresh(skillsPlayer);
+
     wrefresh(statusMonster);
+    wrefresh(skillsMonster);
+
     wrefresh(controls);
 }
 
 std::vector<String> CombatScreen::FormatPlayerStats()
 {
+    std::string damageType =
+        log.player->weapon.damageType == Slash    ? "Slash"    :
+        log.player->weapon.damageType == Puncture ? "Puncture" :
+        log.player->weapon.damageType == Impact   ? "Impact"   :
+                                                    "Unknown"  ;
+
     return std::vector<std::string>{
-        std::format(" {} ({})", log.player->name, log.player->ClassToString()),
+        std::format(" {}", log.player->name),
+        std::format("({})", log.player->ClassToString()),
         std::format("HP:   {}/{}", playerCurrentHP, log.player->hp),
+                    "",
+        std::format("Weapon:   {}", log.player->weapon.name),
+        std::format("- Damage type:   {}", damageType),
+        std::format("- Damage:        {}", log.player->weapon.damage),
                     "",
                     "Stats:",
         std::format("- Strength:    {}", log.player->str),

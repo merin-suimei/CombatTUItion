@@ -21,8 +21,8 @@ EncounterLog Combat::simulateEncounter(
             log.outcome = Draw;
             break;
         }
-        
-        log.attacks.push_back(calculateDamage(player, monster));
+
+        log.attacks.push_back(calculateDamage(player, monster, log.turn));
         currentHPMonster -= log.attacks.back().dmg;
         if (currentHPMonster <= 0)
         {
@@ -30,7 +30,7 @@ EncounterLog Combat::simulateEncounter(
             break;
         }
 
-        log.attacks.push_back(calculateDamage(monster, player));
+        log.attacks.push_back(calculateDamage(monster, player, log.turn));
         currentHPPlayer -= log.attacks.back().dmg;
         if (currentHPPlayer <= 0)
         {
@@ -44,8 +44,11 @@ EncounterLog Combat::simulateEncounter(
     return log;
 }
 
-Attack Combat::calculateDamage(const Contender *source, const Contender *target)
+Attack Combat::calculateDamage(
+    const Contender *source, const Contender *target, int turn)
 {
+    Attack attack = Attack{.dmg = 0, .flag = Normal};
+
     // Prepare random
     std::random_device rd;
     std::mt19937 gen(rd());
@@ -56,13 +59,13 @@ Attack Combat::calculateDamage(const Contender *source, const Contender *target)
 	    return Attack{.dmg = 0, .flag = Miss};
 
     // Caclulating damage
-    int baseDamage = source->str + source->getDamage();
-    int skillDamage = 0;
-    // source.applyAtkSkills();
-    // target.applyDefSkills();
+    attack.dmg = source->str + source->getDamage();
+    source->applyAttackSkills(&attack, target, turn);
+    target->applyDefenceSkills(&attack, source, turn);
 
     // Return result
-    if (baseDamage + skillDamage <= 0)
-	    return Attack{.dmg = 0, .flag = DefenceTooHigh};
-    return Attack{.dmg = baseDamage + skillDamage, .flag = Normal};
+    if (attack.dmg <= 0)
+        attack.dmg = 0;
+
+    return attack;
 }

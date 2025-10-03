@@ -27,7 +27,7 @@ void Game::Start()
     while (running)
     {
         {
-            Monster monster;
+            Monster monster = monstersTable.at(Goblin);
             EncounterLog log = Combat::simulateEncounter(&player, &monster);
             std::shared_ptr<CombatScreen> window = CombatScreen::Create(log);
             window->Open();
