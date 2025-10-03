@@ -125,8 +125,6 @@ void CombatScreen::Open()
     PrintMultiline(statusMonster, STATUS_VPAD, DEFAULT_HPAD, statusTextMonster);
     wrefresh(statusMonster);
 
-    Attack *playerAttack;
-    Attack *monsterAttack;
     // Draw dynamic contents
     for (size_t currentTurn = 1; currentTurn <= log.turn; currentTurn++)
     {
@@ -135,53 +133,31 @@ void CombatScreen::Open()
         mvwprintw(counter, 1, COUNTER_HPAD, counterText.c_str());
         wrefresh(counter);
 
-        // Player's halfturn
-        playerAttack = &log.attacks.at((currentTurn-1)*2);
-        monsterCurrentHP -= playerAttack->dmg;
-
-        mvwprintw(statusMonster, STATUS_VPAD + MONSTER_HP_LINE - 1, DEFAULT_HPAD,
-            // Extra spaces to overwrite larger numbers
-            std::format("HP:       {}/{}   ",
-                monsterCurrentHP, log.monster->hp).c_str());
-        box(statusMonster, 0, 0);
-        wrefresh(statusMonster);
-
-        mvwprintw(damageMonster, 0, 0, std::format("{}",
-            playerAttack->flag != Miss ? std::to_string(-playerAttack->dmg) :
-                                         "Miss").c_str());
-        wrefresh(damageMonster);
+        if (log.initiative == PlayerFirst)
+            DrawPlayerHalfturn((currentTurn - 1)*2);
+        else
+            DrawMonsterHalfturn((currentTurn - 1)*2);
 
         wtimeout(controls, HALFTURN_DELAY_MS);
         if(wgetch(controls) == KEY_RESIZE)
             WindowManager::RedrawAll();
-        wclear(damageMonster);
+        wrefresh(damagePlayer);
         wrefresh(damageMonster);
 
         // Check if next halfturn exists
         if ((currentTurn-1)*2 + 1 >= log.attacks.size())
             break;
 
-        // Monster's halfturn
-        monsterAttack = &log.attacks.at((currentTurn - 1)*2 + 1);
-        playerCurrentHP -= monsterAttack->dmg;
-
-        mvwprintw(statusPlayer, STATUS_VPAD + PLAYER_HP_LINE - 1, DEFAULT_HPAD,
-            // Extra spaces to overwrite larger numbers
-            std::format("HP:   {}/{}   ",
-                playerCurrentHP, log.player->hp).c_str());
-        box(statusPlayer, 0, 0);
-        wrefresh(statusPlayer);
-
-        mvwprintw(damagePlayer, 0, 0, std::format("{}",
-            monsterAttack->flag != Miss ? std::to_string(-monsterAttack->dmg) :
-                                          "Miss").c_str());
-        wrefresh(damagePlayer);
+        if (log.initiative == MonsterFirst)
+            DrawPlayerHalfturn((currentTurn - 1)*2 + 1);
+        else
+            DrawMonsterHalfturn((currentTurn - 1)*2 + 1);
 
         wtimeout(controls, TURN_DELAY_MS);
         if(wgetch(controls) == KEY_RESIZE)
             WindowManager::RedrawAll();
-        wclear(damagePlayer);
         wrefresh(damagePlayer);
+        wrefresh(damageMonster);
     }
 }
 
@@ -273,6 +249,47 @@ void CombatScreen::PrintMultiline(WINDOW *win, int vpad, int hpad,
     for (String line : text)
         wprintw(win, (String(hpad, ' ') + line + '\n').c_str());
     box(win, 0, 0);
+}
+
+void CombatScreen::DrawPlayerHalfturn(size_t currentAttack)
+{
+    // Player's halfturn
+    Attack *playerAttack = &log.attacks.at(currentAttack);
+    monsterCurrentHP -= playerAttack->dmg;
+
+    mvwprintw(statusMonster, STATUS_VPAD + MONSTER_HP_LINE - 1, DEFAULT_HPAD,
+        // Extra spaces to overwrite larger numbers
+        std::format("HP:       {}/{}   ",
+            monsterCurrentHP, log.monster->hp).c_str());
+    box(statusMonster, 0, 0);
+    wrefresh(statusMonster);
+
+    mvwprintw(damageMonster, 0, 0, std::format("{}",
+        playerAttack->flag != Miss ? std::to_string(-playerAttack->dmg) :
+                                     "Miss").c_str());
+    wrefresh(damageMonster);
+    wclear(damageMonster);
+}
+
+
+void CombatScreen::DrawMonsterHalfturn(size_t currentAttack)
+{
+    // Monster's halfturn
+    Attack *monsterAttack = &log.attacks.at(currentAttack);
+    playerCurrentHP -= monsterAttack->dmg;
+
+    mvwprintw(statusPlayer, STATUS_VPAD + PLAYER_HP_LINE - 1, DEFAULT_HPAD,
+        // Extra spaces to overwrite larger numbers
+        std::format("HP:   {}/{}   ",
+            playerCurrentHP, log.player->hp).c_str());
+    box(statusPlayer, 0, 0);
+    wrefresh(statusPlayer);
+
+    mvwprintw(damagePlayer, 0, 0, std::format("{}",
+        monsterAttack->flag != Miss ? std::to_string(-monsterAttack->dmg) :
+                                      "Miss").c_str());
+    wrefresh(damagePlayer);
+    wclear(damagePlayer);
 }
 
 std::vector<String> CombatScreen::FormatPlayerStats()

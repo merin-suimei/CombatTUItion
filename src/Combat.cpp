@@ -8,7 +8,9 @@
 EncounterLog Combat::simulateEncounter(
     const Player *player, const Monster *monster)
 {
-    EncounterLog log{.player = player, .monster = monster};
+    EncounterLog log{.player = player, .monster = monster, .initiative =
+        player->agi >= monster->agi ? PlayerFirst :
+                                      MonsterFirst};
 
     int currentHPPlayer = player->hp;
     int currentHPMonster = monster->hp;
@@ -22,12 +24,15 @@ EncounterLog Combat::simulateEncounter(
             break;
         }
 
-        log.attacks.push_back(calculateDamage(player, monster, log.turn));
-        currentHPMonster -= log.attacks.back().dmg;
-        if (currentHPMonster <= 0)
+        if (log.initiative == PlayerFirst)
         {
-            log.outcome = PlayerWon;
-            break;
+            log.attacks.push_back(calculateDamage(player, monster, log.turn));
+            currentHPMonster -= log.attacks.back().dmg;
+            if (currentHPMonster <= 0)
+            {
+                log.outcome = PlayerWon;
+                break;
+            }
         }
 
         log.attacks.push_back(calculateDamage(monster, player, log.turn));
@@ -36,6 +41,17 @@ EncounterLog Combat::simulateEncounter(
         {
             log.outcome = PlayerLost;
             break;
+        }
+
+        if (log.initiative == MonsterFirst)
+        {
+            log.attacks.push_back(calculateDamage(player, monster, log.turn));
+            currentHPMonster -= log.attacks.back().dmg;
+            if (currentHPMonster <= 0)
+            {
+                log.outcome = PlayerWon;
+                break;
+            }
         }
 
         log.turn++;
