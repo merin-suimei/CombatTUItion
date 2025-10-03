@@ -205,7 +205,7 @@ void CombatScreen::Redraw()
         COLS-(STATUS_W+DAMAGE_SPACING+DAMAGE_W));
     mvwin(skillsMonster, COUNTER_H + STATUS_H + 1, COLS - SKILLS_W);
 
-    mvwin(controls, LINES-CONTROLS_H, (COLS - controlsText.size())/2);
+    mvwin(controls, LINES-CONTROLS_H, (COLS - controlsWidth)/2);
 
     // Restore after cut off by small screen
     if (getmaxx(counter) != COUNTER_W || getmaxy(counter) != COUNTER_H)
