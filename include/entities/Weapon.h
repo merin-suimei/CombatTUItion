@@ -1,16 +1,12 @@
 #pragma once
 
+#include "entities/DamageType.h"
 #include <map>
 #include <string>
 
 enum WeaponType
 {
     Sword, Club, Dagger, Axe, Spear, LegendarySword
-};
-
-enum DamageType
-{
-    Slash, Puncture, Impact
 };
 
 struct Weapon

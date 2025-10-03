@@ -21,11 +21,15 @@ private:
     int playerCurrentHP;
     std::vector<std::string> statusTextPlayer;
     WINDOW *damagePlayer;
+    WINDOW *skillsPlayer;
+    std::vector<std::string> skillsTextPlayer;
 
     WINDOW *statusMonster;
     int monsterCurrentHP;
     std::vector<std::string> statusTextMonster;
     WINDOW *damageMonster;
+    WINDOW *skillsMonster;
+    std::vector<std::string> skillsTextMonster;
 
     WINDOW *controls;
     std::string controlsText;

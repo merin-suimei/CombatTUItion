@@ -2,7 +2,7 @@
 
 //Temp before lookup table
 Monster::Monster(std::string name, int hp, int dmg,
-    int str, int agi, int end, Weapon reward)
+    int str, int agi, int end, Weapon reward, Skill *skill)
 {
     this->name = name;
     this->hp = hp;
@@ -12,10 +12,30 @@ Monster::Monster(std::string name, int hp, int dmg,
     this->agi = agi;
     this->end = end;
 
+    this->skill = skill;
     this->reward = reward;
 }
 
 int Monster::getDamage() const
 {
     return dmg;
+}
+
+DamageType Monster::getDamageType() const
+{
+    return DamageMonster;
+}
+
+void Monster::applyAttackSkills(
+    Attack *attack, const Contender *opponent, int turn) const
+{
+    if (skill->type == Offensive)
+        skill->applySkill(attack, this, opponent, turn);
+}
+
+void Monster::applyDefenceSkills(
+    Attack *attack, const Contender *opponent, int turn) const
+{
+    if (skill->type == Defensive)
+        skill->applySkill(attack, this, opponent, turn);
 }

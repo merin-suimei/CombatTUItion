@@ -2,22 +2,12 @@
 
 #include "entities/Monster.h"
 #include "entities/Player.h"
+#include "Attack.h"
 #include <vector>
-
-enum AttackFlag
-{
-    Normal, Miss, DefenceTooHigh
-};
 
 enum EncounterOutcome
 {
     PlayerWon, PlayerLost, Draw
-};
-
-struct Attack
-{
-    int dmg;
-    AttackFlag flag;
 };
 
 struct EncounterLog
