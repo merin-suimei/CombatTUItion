@@ -9,6 +9,8 @@ class CombatScreen : public Redrawable
 {
 private:
     CombatScreen(const EncounterLog log);
+    void PrintMultiline(WINDOW *win, int vpad, int hpad,
+        std::vector<std::string> text);
     std::vector<std::string> FormatPlayerStats();
     std::vector<std::string> FormatMonsterStats();
 private:
