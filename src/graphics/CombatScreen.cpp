@@ -69,11 +69,7 @@ CombatScreen::CombatScreen(const EncounterLog log)
         skillsTextPlayer.push_back(' ' + skill->name);
         skillsTextPlayer.push_back(skill->description);
     }
-    wmove(skillsPlayer, SKILLS_VPAD, 0);
-    for (String line : skillsTextPlayer)
-        wprintw(skillsPlayer,
-            (String(DEFAULT_HPAD, ' ') + line + '\n').c_str());
-    box(skillsPlayer, 0, 0);
+    PrintMultiline(skillsPlayer, SKILLS_VPAD, DEFAULT_HPAD, skillsTextPlayer);
 
     // Format monster status
     statusTextMonster = FormatMonsterStats();
@@ -87,11 +83,7 @@ CombatScreen::CombatScreen(const EncounterLog log)
         COUNTER_H + STATUS_H + 1, COLS - SKILLS_W);
     skillsTextMonster = {
         log.monster->skill->name, log.monster->skill->description};
-    wmove(skillsMonster, SKILLS_VPAD, 0);
-    for (String line : skillsTextMonster)
-        wprintw(skillsMonster,
-            (String(DEFAULT_HPAD, ' ') + line + '\n').c_str());
-    box(skillsMonster, 0, 0);
+    PrintMultiline(skillsMonster, SKILLS_VPAD, DEFAULT_HPAD, skillsTextMonster);
 
     // Format and fill controls tip
     controlsText = CONTROL_TIP;
@@ -126,19 +118,11 @@ void CombatScreen::Open()
     wrefresh(controls);
 
     // Draw player's initial stats
-    wmove(statusPlayer, STATUS_VPAD, 0);
-    for (String line : statusTextPlayer)
-        wprintw(statusPlayer,
-            (String(DEFAULT_HPAD, ' ') + line + '\n').c_str());
-    box(statusPlayer, 0, 0);
+    PrintMultiline(statusPlayer, STATUS_VPAD, DEFAULT_HPAD, statusTextPlayer);
     wrefresh(statusPlayer);
 
     // Draw monster's initial stats
-    wmove(statusMonster, STATUS_VPAD, 0);
-    for (String line : statusTextMonster)
-        wprintw(statusMonster,
-            (String(DEFAULT_HPAD, ' ') + line + '\n').c_str());
-    box(statusMonster, 0, 0);
+    PrintMultiline(statusMonster, STATUS_VPAD, DEFAULT_HPAD, statusTextMonster);
     wrefresh(statusMonster);
 
     Attack *playerAttack;
@@ -234,11 +218,8 @@ void CombatScreen::Redraw()
     if (getmaxx(statusPlayer) != STATUS_W || getmaxy(statusPlayer) != STATUS_H)
     {
         wresize(statusPlayer, STATUS_H, STATUS_W);
-        wmove(statusPlayer, STATUS_VPAD, 0);
-        for (String line : statusTextPlayer)
-            wprintw(statusPlayer,
-                (String(DEFAULT_HPAD, ' ') + line + '\n').c_str());
-        box(statusPlayer, 0, 0);
+        PrintMultiline(statusPlayer, STATUS_VPAD, DEFAULT_HPAD,
+            statusTextPlayer);
     }
     if (getmaxx(damagePlayer) != DAMAGE_W || getmaxy(damagePlayer) != DAMAGE_H)
         wresize(damagePlayer, DAMAGE_H, DAMAGE_W);
@@ -246,21 +227,15 @@ void CombatScreen::Redraw()
     if (getmaxx(skillsPlayer) != SKILLS_W || getmaxy(skillsPlayer) != SKILLS_H)
     {
         wresize(skillsPlayer, SKILLS_H, SKILLS_W);
-        wmove(skillsPlayer, SKILLS_VPAD, 0);
-        for (String line : skillsTextPlayer)
-            wprintw(skillsPlayer,
-                (String(DEFAULT_HPAD, ' ') + line + '\n').c_str());
-        box(skillsPlayer, 0, 0);
+        PrintMultiline(skillsPlayer, SKILLS_VPAD, DEFAULT_HPAD,
+            skillsTextPlayer);
     }
 
     if (getmaxx(statusMonster) != STATUS_W || getmaxy(statusMonster) != STATUS_H)
     {
         wresize(statusMonster, STATUS_H, STATUS_W);
-        wmove(statusMonster, STATUS_VPAD, 0);
-        for (String line : statusTextMonster)
-            wprintw(statusMonster,
-                (String(DEFAULT_HPAD, ' ') + line + '\n').c_str());
-        box(statusMonster, 0, 0);
+        PrintMultiline(statusMonster, STATUS_VPAD, DEFAULT_HPAD,
+            statusTextMonster);
     }
     if (getmaxx(damageMonster) != DAMAGE_W || getmaxy(damageMonster) != DAMAGE_H)
         wresize(damageMonster, DAMAGE_H, DAMAGE_W);
@@ -268,11 +243,8 @@ void CombatScreen::Redraw()
     if (getmaxx(skillsMonster) != SKILLS_W || getmaxy(skillsMonster) != SKILLS_H)
     {
         wresize(skillsMonster, SKILLS_H, SKILLS_W);
-        wmove(skillsMonster, SKILLS_VPAD, 0);
-        for (String line : skillsTextMonster)
-            wprintw(skillsMonster,
-                (String(DEFAULT_HPAD, ' ') + line + '\n').c_str());
-        box(skillsMonster, 0, 0);
+        PrintMultiline(skillsMonster, SKILLS_VPAD, DEFAULT_HPAD,
+            skillsTextMonster);
     }
 
     if (getmaxx(controls) != controlsWidth || getmaxy(controls) != CONTROLS_H)
@@ -292,6 +264,15 @@ void CombatScreen::Redraw()
     wrefresh(skillsMonster);
 
     wrefresh(controls);
+}
+
+void CombatScreen::PrintMultiline(WINDOW *win, int vpad, int hpad,
+    std::vector<String> text)
+{
+    wmove(win, vpad, 0);
+    for (String line : text)
+        wprintw(win, (String(hpad, ' ') + line + '\n').c_str());
+    box(win, 0, 0);
 }
 
 std::vector<String> CombatScreen::FormatPlayerStats()
