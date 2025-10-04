@@ -9,6 +9,7 @@
 #include <curses.h>
 #include <format>
 #include <random>
+#include <string>
 
 Game::Game()
 {
@@ -75,24 +76,52 @@ void Game::RunChallenge()
         std::shared_ptr<CombatScreen> window = CombatScreen::Create(log);
         window->Open();
 
-        std::string popupText =
-            log.outcome == PlayerWon  ? player->name + " won" :
-            log.outcome == PlayerLost ? monster.name + " won" :
-            log.outcome == Draw       ? "Draw"                :
-                                        "Unknown"             ;
-        std::shared_ptr<PopupWindow> popup = PopupWindow::Create(
-            {popupText}, {"Close"});
-        popup->OpenAndGetButton();
-    }
-    WindowManager::RedrawAll();
+        switch (log.outcome)
+        {
+        case PlayerWon:
+        {
+            std::string damageType =
+                monster.reward.damageType == Slash    ? "Slash"    :
+                monster.reward.damageType == Puncture ? "Puncture" :
+                monster.reward.damageType == Impact   ? "Impact"   :
+                                                        "Unknown"  ;
+            std::shared_ptr<PopupWindow> popup = PopupWindow::Create({
+                std::format(" {} won", player->name),
+                std::format("Weapon droped: {}", monster.reward.name),
+                std::format("- Damage type: {}", damageType),
+                std::format("- Damage:      {}", monster.reward.damage),
+                            "Pick it up?"},
+                {"No", "Yes"});
+            if (popup->OpenAndGetButton() == 1)
+                player->weapon = monster.reward;
+        }
+            WindowManager::RedrawAll();
+            if (player->getTotalLevel() < MAX_LEVEL)
+            {
+                std::shared_ptr<ClassSelector> selector = ClassSelector::Create(
+                    player->lvlRouge, player->lvlWarrior, player->lvlBarbarian);
+                player->LevelUp(selector->OpenAndGetClass());
+            }
+            break;
 
-    {
-        std::shared_ptr<PopupWindow> popup = PopupWindow::Create(
-            {"Retry?"}, {"Yes", "No"});
-        if (popup->OpenAndGetButton() == 0)
-            gameState = CharacterCreation;
-        else
-            gameState = Stopped;
+        case PlayerLost:
+        case Draw:
+        {
+            std::shared_ptr<PopupWindow> popup = PopupWindow::Create(
+                {log.outcome == Draw ?
+                    " Draw" : std::format(" {} won", monster.name),
+                "Challange failed. Try again?"},
+                {"No", "Yes"});
+            if (popup->OpenAndGetButton() == 1)
+                gameState = CharacterCreation;
+            else
+                gameState = Stopped;
+        }
+            break;
+
+        default: // Do nothing
+            break;
+        }
     }
     WindowManager::RedrawAll();
 }
