@@ -11,6 +11,8 @@
 #include <random>
 #include <string>
 
+#define MAX_ENCOUNTERS 5
+
 Game::Game()
 {
     setlocale(LC_ALL, "");
@@ -69,6 +71,8 @@ void Game::RunChallenge()
     // Hardcoded (First, Last)
     std::uniform_int_distribution<> monsterDist(Goblin, Dragon);
 
+    bool challengeFailed = false;
+    for (size_t encounter = 0; encounter < MAX_ENCOUNTERS; encounter++)
     {
         Monster monster = monstersTable.at(MonsterType(monsterDist(gen)));
         EncounterLog log = Combat::simulateEncounter(player, &monster);
@@ -85,14 +89,14 @@ void Game::RunChallenge()
                 monster.reward.damageType == Puncture ? "Puncture" :
                 monster.reward.damageType == Impact   ? "Impact"   :
                                                         "Unknown"  ;
-            std::shared_ptr<PopupWindow> popup = PopupWindow::Create({
-                std::format(" {} won", player->name),
+            std::shared_ptr<PopupWindow> weaponDrop = PopupWindow::Create({
+                std::format("Encounter {}: {} won", encounter + 1, player->name),
                 std::format("Weapon droped: {}", monster.reward.name),
                 std::format("- Damage type: {}", damageType),
                 std::format("- Damage:      {}", monster.reward.damage),
                             "Pick it up?"},
                 {"No", "Yes"});
-            if (popup->OpenAndGetButton() == 1)
+            if (weaponDrop->OpenAndGetButton() == 1)
                 player->weapon = monster.reward;
         }
             WindowManager::RedrawAll();
@@ -102,26 +106,61 @@ void Game::RunChallenge()
                     player->lvlRouge, player->lvlWarrior, player->lvlBarbarian);
                 player->LevelUp(selector->OpenAndGetClass());
             }
+            WindowManager::RedrawAll();
             break;
 
         case PlayerLost:
         case Draw:
         {
-            std::shared_ptr<PopupWindow> popup = PopupWindow::Create(
+            std::shared_ptr<PopupWindow> windowLost = PopupWindow::Create(
                 {log.outcome == Draw ?
-                    " Draw" : std::format(" {} won", monster.name),
+                    std::format("Encounter {}:  Draw", encounter + 1) :
+                    std::format("Encounter {}: {} won" ,encounter + 1,
+                        monster.name),
                 "Challange failed. Try again?"},
                 {"No", "Yes"});
-            if (popup->OpenAndGetButton() == 1)
+            if (windowLost->OpenAndGetButton() == 1)
                 gameState = CharacterCreation;
             else
                 gameState = Stopped;
         }
-            break;
+            challengeFailed = true;
+            goto end;
 
         default: // Do nothing
             break;
         }
+    }
+
+end:
+    WindowManager::RedrawAll();
+    if (!challengeFailed)
+    {
+        std::string damageType =
+            player->weapon.damageType == Slash    ? "Slash"    :
+            player->weapon.damageType == Puncture ? "Puncture" :
+            player->weapon.damageType == Impact   ? "Impact"   :
+                                                    "Unknown"  ;
+        std::shared_ptr<PopupWindow> victory = PopupWindow::Create({
+                        "Congratulations! Challange cleared",
+                        "",
+            std::format(" {}", player->name),
+            std::format("({})", player->ClassToString()),
+            std::format("HP:   {}", player->hp),
+                        "",
+            std::format("Weapon:   {}", player->weapon.name),
+            std::format("- Damage type:   {}", damageType),
+            std::format("- Damage:        {}", player->weapon.damage),
+                        "",
+                        "Stats:",
+            std::format("- Strength:    {}", player->str),
+            std::format("- Agility:     {}", player->agi),
+            std::format("- Endurance:   {}", player->end)},
+            {"Exit", "New character"});
+        if(victory->OpenAndGetButton() == 0)
+            gameState = Stopped;
+        else
+            gameState = CharacterCreation;
     }
     WindowManager::RedrawAll();
 }
