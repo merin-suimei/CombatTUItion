@@ -3,9 +3,9 @@
 #include "graphics/WindowManager.h"
 #include "format"
 
-#define SUBWINDOW_W 33
+#define SUBWINDOW_W 28
 
-#define HEIGHT 23
+#define HEIGHT 25
 #define WIDTH ((SUBWINDOW_W + 1)*TOTAL_CLASSES + 1)
 
 #define BUTTON_OFFSET 3
@@ -36,7 +36,7 @@ ClassSelector::ClassSelector(int lvlRouge, int lvlWarrior, int lvlBarbarian)
     rouge = newwin(HEIGHT - 2, SUBWINDOW_W,
         (LINES - HEIGHT)/2 + 1, (COLS - WIDTH)/2 + 1);
     rougeText = (lvlRouge ?
-        std::format(" Rouge - lvl {}\n", lvlRouge) : " Rouge\n") +
+        std::format("\n Rouge - lvl {}\n", lvlRouge) : "\n Rouge\n") +
         "+4 hp per level\n\n"
         "Starting weapon: Dagger\n"
         "- Damage type:   Puncture\n"
@@ -50,7 +50,7 @@ ClassSelector::ClassSelector(int lvlRouge, int lvlWarrior, int lvlBarbarian)
     warrior = newwin(HEIGHT - 2, SUBWINDOW_W,
         (LINES - HEIGHT)/2 + 1, (COLS - WIDTH)/2 + (SUBWINDOW_W + 1) + 1);
     warriorText = (lvlWarrior ?
-        std::format(" Warrior - lvl {}\n", lvlWarrior) : " Warrior\n") +
+        std::format("\n Warrior - lvl {}\n", lvlWarrior) : "\n Warrior\n") +
         "+5 hp per level\n\n"
         "Starting weapon: Sword\n"
         "- Damage type:   Slash\n"
@@ -64,7 +64,7 @@ ClassSelector::ClassSelector(int lvlRouge, int lvlWarrior, int lvlBarbarian)
     barbarian = newwin(HEIGHT - 2, SUBWINDOW_W,
         (LINES - HEIGHT)/2 + 1, (COLS - WIDTH)/2 + (SUBWINDOW_W + 1)*2 + 1);
     barbarianText = (lvlBarbarian ?
-        std::format(" Barbarian - lvl {}\n", lvlBarbarian) : " Barbarian\n") +
+        std::format("\n Barbarian - lvl {}\n", lvlBarbarian) : "\n Barbarian\n") +
         "+6 hp per level\n\n"
         "Starting weapon: Club\n"
         "- Damage type:   Impact\n"

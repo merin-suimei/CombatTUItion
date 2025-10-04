@@ -12,21 +12,21 @@ private:
     ClassSelector(int lvlRouge, int lvlWarrior, int lvlBarbarian);
     const std::string rougeBonuses[MAX_LEVEL] = {
         "[Skill] Sneak Attack\n"
-        " +1 damage if your agi higher\n than opponents'",
+        " +1 damage if your agi\nhigher than opponents'",
         "[Stat] +1 agi",
         "[Skill] Poison\n"
         "+1 damage at the end of turn"};
     const std::string warriorBonuses[MAX_LEVEL] = {
         "[Skill] Call to Arms\n"
-        " Double weapon's damage during\n first turn",
+        " Double weapon's damage\nduring first turn",
         "[Skill] Shield\n"
-        " Ignore 3 damage if your str\n higher than opponents'",
+        " Ignore 3 damage if your\nstrhigher than opponents'",
         "[Stat] +1 str"};
     const std::string barbarianBonuses[MAX_LEVEL] = {
         "[Skill] Rage\n"
-        " +2 damage during first 3 turns,\n then -1 damage",
+        " +2 damage during first 3\nturns, then -1 damage",
         "[Skill] Stone Skin\n"
-        " Ignore 1 damage for every end\n point",
+        " Ignore 1 damage for every\nend point",
         "[Stat] +1 end"};
 private:
     WINDOW *window;
