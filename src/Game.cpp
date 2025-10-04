@@ -1,6 +1,7 @@
 #include "Game.h"
 
 #include "entities/Monster.h"
+#include "graphics/ClassSelector.h"
 #include "graphics/CombatScreen.h"
 #include "graphics/PopupWindow.h"
 #include "graphics/WindowManager.h"
@@ -33,8 +34,12 @@ void Game::Start()
         case CharacterCreation:
             if (player != nullptr)
                 delete player;
-
-            player = new Player("Nameless", Warrior);
+            {
+                std::shared_ptr<ClassSelector> window =
+                    ClassSelector::Create(0, 0, 0);
+                player = new Player("Nameless", window->OpenAndGetClass());
+            }
+            WindowManager::RedrawAll();
             gameState = Challenge;
             // Fall-through
 

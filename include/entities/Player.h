@@ -7,9 +7,12 @@
 #include <string>
 #include <vector>
 
+#define TOTAL_CLASSES 3
+#define MAX_LEVEL 3
+
 enum PlayerClass
 {
-    Rouge, Warrior, Barbarian
+    NoClass, Rouge, Warrior, Barbarian
 };
 
 class Player : public Contender
@@ -25,6 +28,7 @@ public:
     void applyDefenceSkills(
         Attack *attack, const Contender *opponent, int turn) const override;
 
+    int getTotalLevel() const;
     void LevelUp(PlayerClass playerClass);
     std::string ClassToString() const;
 public:
