@@ -52,7 +52,7 @@ Rage::Rage()
 {
     name = "Rage";
     description = "+2 damage during first 3 turns, then -1 damage";
-    type = Defensive;
+    type = Offensive;
 }
 
 void Rage::applySkill(
