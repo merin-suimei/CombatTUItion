@@ -35,7 +35,7 @@ void CallToArms::applySkill(
 Shield::Shield()
 {
     name = "Shield";
-    description = "Ignore 3 damage if your str higher than opponents'";
+    description = "Ignore 3 damage if your Strength higher than opponents'";
     type = Defensive;
 }
 

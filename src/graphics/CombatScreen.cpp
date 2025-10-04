@@ -19,7 +19,7 @@
 #define MONSTER_HP_LINE 2
 
 #define SKILLS_H 8
-#define SKILLS_W 56
+#define SKILLS_W 61
 #define SKILLS_VPAD 1
 
 #define DAMAGE_SPACING 3

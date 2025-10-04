@@ -36,7 +36,7 @@ void Amorphous::applySkill(
 DragonBreath::DragonBreath()
 {
     name = "Dragon Breath";
-    description = "Deals 3 damage 3 turns";
+    description = "Deals 3 damage every 3 turns";
     type = Offensive;
 }
 
