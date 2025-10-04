@@ -2,16 +2,23 @@
 
 #include "entities/Player.h"
 
+enum GameState
+{
+    NotStarted, CharacterCreation, Challenge, Stopped
+};
+
 class Game
 {
 private:
-    bool running = false;
-    Player player = Player("Nameless", Warrior); // Temp
+    void RunChallenge();
+private:
+    GameState gameState = NotStarted;
+    Player *player = nullptr;
 
 public:
     Game();
     ~Game();
 
     void Start();
-    bool IsRunning() const;
+    GameState getGameState() const;
 };
