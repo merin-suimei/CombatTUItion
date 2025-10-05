@@ -9,7 +9,12 @@ file(GLOB_RECURSE source_files "${source_dir}/*.cpp")
 
 include_directories("include")
 
-find_package(Curses REQUIRED)
-
 add_executable(CombatTUItion ${source_files})
-target_link_libraries(CombatTUItion ${NCURSES_LIBRARIES})
+
+if(WIN32 OR MSVC)
+    add_subdirectory(lib)
+    target_link_libraries(CombatTUItion PRIVATE PDCurses)
+else()
+    find_package(Curses REQUIRED)
+    target_link_libraries(CombatTUItion ${NCURSES_LIBRARIES})
+endif()
