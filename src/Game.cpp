@@ -4,6 +4,7 @@
 #include "graphics/ClassSelector.h"
 #include "graphics/CombatScreen.h"
 #include "graphics/PopupWindow.h"
+#include "graphics/TextField.h"
 #include "graphics/WindowManager.h"
 #include "Combat.h"
 #include <curses.h>
@@ -160,12 +161,37 @@ end:
 
 void Game::CreateCharacter()
 {
+    std::string name = "";
+    bool changeName = false;
+
     if (player != nullptr)
+    {
+        name = player->name;
         delete player;
+    }
+    if (name == "")
+        changeName = true;
+    else
+    {
+        std::shared_ptr<PopupWindow> popup = PopupWindow::Create({
+            "Current name:", name}, {"Keep", "Change"});
+        if (popup->OpenAndGetButton() == 1)
+            changeName == true;
+    }
+    WindowManager::RedrawAll();
+
+    if (changeName)
+    {
+        std::shared_ptr<TextField> input =
+            TextField::Create("Enter name:");
+        name = input->OpenAndGetInput();
+    }
+    WindowManager::RedrawAll();
+
     {
         std::shared_ptr<ClassSelector> window =
             ClassSelector::Create(0, 0, 0);
-        player = new Player("Nameless", window->OpenAndGetClass());
+        player = new Player(name, window->OpenAndGetClass());
     }
     WindowManager::RedrawAll();
 }
