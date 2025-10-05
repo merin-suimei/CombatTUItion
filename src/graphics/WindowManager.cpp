@@ -4,6 +4,9 @@
 
 void WindowManager::RedrawAll()
 {
+    #ifdef _WIN32
+    resize_term(0, 0);
+    #endif
     // Clear screen
     clear();
     refresh();
