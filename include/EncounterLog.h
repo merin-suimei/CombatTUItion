@@ -10,6 +10,11 @@ enum EncounterOutcome
     PlayerWon, PlayerLost, Draw
 };
 
+enum ContenderInitiative
+{
+    PlayerFirst, MonsterFirst
+};
+
 struct EncounterLog
 {
     const Player *player;
@@ -17,5 +22,6 @@ struct EncounterLog
 
     std::vector<Attack> attacks;
     int turn = 1;
+    ContenderInitiative initiative;
     EncounterOutcome outcome;
 };

@@ -11,6 +11,9 @@ private:
     CombatScreen(const EncounterLog log);
     void PrintMultiline(WINDOW *win, int vpad, int hpad,
         std::vector<std::string> text);
+
+    void DrawPlayerHalfturn(size_t currentTurn);
+    void DrawMonsterHalfturn(size_t currentTurn);
     std::vector<std::string> FormatPlayerStats();
     std::vector<std::string> FormatMonsterStats();
 private:

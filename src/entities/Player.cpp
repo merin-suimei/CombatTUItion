@@ -58,9 +58,14 @@ void Player::applyDefenceSkills(
             skill->applySkill(attack, this, opponent, turn);
 }
 
+int Player::getTotalLevel() const
+{
+    return lvlRouge + lvlWarrior + lvlBarbarian;
+}
+
 void Player::LevelUp(PlayerClass playerClass)
 {
-    if (lvlRouge + lvlWarrior + lvlBarbarian >= 3)
+    if (getTotalLevel() >= MAX_LEVEL)
         return;
 
     switch (playerClass)
@@ -126,6 +131,8 @@ void Player::LevelUp(PlayerClass playerClass)
     default: // Do nothing
         break;
     }
+
+    hp += end;
 }
 
 std::string Player::ClassToString() const

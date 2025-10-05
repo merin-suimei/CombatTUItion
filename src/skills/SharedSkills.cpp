@@ -4,7 +4,7 @@
 SneakAttack::SneakAttack()
 {
     name = "Sneak Attack";
-    description = "+1 damage if your agi higher than opponents'";
+    description = "+1 damage if your Agility higher than opponents'";
     type = Offensive;
 }
 
@@ -20,7 +20,7 @@ void SneakAttack::applySkill(
 StoneSkin::StoneSkin()
 {
     name = "Stone Skin";
-    description = "Ignore 1 damage for every end point";
+    description = "Ignore 1 damage for every Endurance point";
     type = Defensive;
 }
 
