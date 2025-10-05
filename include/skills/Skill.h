@@ -1,8 +1,6 @@
 #pragma once
 
 #include "entities/Contender.h"
-#include "Attack.h"
-#include <string>
 
 enum SkillType
 {

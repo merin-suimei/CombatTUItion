@@ -1,13 +1,9 @@
 #pragma once
 
 #include "entities/Contender.h"
-#include "entities/DamageType.h"
 #include "entities/Weapon.h"
 #include "skills/MonsterSkills.h"
 #include "skills/SharedSkills.h"
-#include "skills/Skill.h"
-#include "Attack.h"
-#include <map>
 
 enum MonsterType
 {

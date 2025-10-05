@@ -4,7 +4,6 @@
 #include "graphics/Redrawable.h"
 #include <curses.h>
 #include <memory>
-#include <string>
 
 class ClassSelector : public Redrawable
 {

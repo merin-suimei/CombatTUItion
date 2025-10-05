@@ -1,16 +1,13 @@
 #include "Game.h"
 
-#include "entities/Monster.h"
 #include "graphics/ClassSelector.h"
 #include "graphics/CombatScreen.h"
 #include "graphics/PopupWindow.h"
 #include "graphics/TextField.h"
 #include "graphics/WindowManager.h"
 #include "Combat.h"
-#include <curses.h>
 #include <format>
 #include <random>
-#include <string>
 
 #define MAX_ENCOUNTERS 5
 

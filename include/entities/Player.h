@@ -3,8 +3,6 @@
 #include "entities/Contender.h"
 #include "entities/Weapon.h"
 #include "skills/Skill.h"
-#include "Attack.h"
-#include <string>
 #include <vector>
 
 #define TOTAL_CLASSES 3

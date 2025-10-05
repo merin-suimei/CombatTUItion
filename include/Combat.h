@@ -1,8 +1,5 @@
 #pragma once
 
-#include "entities/Monster.h"
-#include "entities/Player.h"
-#include "Attack.h"
 #include "EncounterLog.h"
 
 namespace Combat

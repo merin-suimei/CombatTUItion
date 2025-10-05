@@ -2,8 +2,6 @@
 
 #include "entities/Monster.h"
 #include "entities/Player.h"
-#include "Attack.h"
-#include <vector>
 
 enum EncounterOutcome
 {

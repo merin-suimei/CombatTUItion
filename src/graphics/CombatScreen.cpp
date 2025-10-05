@@ -2,7 +2,6 @@
 
 #include "graphics/WindowManager.h"
 #include "skills/Skill.h"
-#include "Attack.h"
 #include <format>
 
 #define DEFAULT_HPAD 3
