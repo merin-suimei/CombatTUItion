@@ -11,6 +11,7 @@ class Game
 {
 private:
     void RunChallenge();
+    void CreateCharacter();
 private:
     GameState gameState = NotStarted;
     Player *player = nullptr;

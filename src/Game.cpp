@@ -35,14 +35,7 @@ void Game::Start()
         switch (gameState)
         {
         case CharacterCreation:
-            if (player != nullptr)
-                delete player;
-            {
-                std::shared_ptr<ClassSelector> window =
-                    ClassSelector::Create(0, 0, 0);
-                player = new Player("Nameless", window->OpenAndGetClass());
-            }
-            WindowManager::RedrawAll();
+            CreateCharacter();
             gameState = Challenge;
             // Fall-through
 
@@ -161,6 +154,18 @@ end:
             gameState = Stopped;
         else
             gameState = CharacterCreation;
+    }
+    WindowManager::RedrawAll();
+}
+
+void Game::CreateCharacter()
+{
+    if (player != nullptr)
+        delete player;
+    {
+        std::shared_ptr<ClassSelector> window =
+            ClassSelector::Create(0, 0, 0);
+        player = new Player("Nameless", window->OpenAndGetClass());
     }
     WindowManager::RedrawAll();
 }
