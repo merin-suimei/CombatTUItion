@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 4.1)
 
+set(CMAKE_C_FLAGS "-DPDC_WIDE -DPDC_FORCE_UTF8")
+
 add_library(PDCurses STATIC
   PDCurses/curses.h
   PDCurses/curspriv.h
