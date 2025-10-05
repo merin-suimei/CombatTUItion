@@ -48,11 +48,6 @@ void Game::Start()
     }
 }
 
-GameState Game::getGameState() const
-{
-    return gameState;
-}
-
 void Game::RunChallenge()
 {
     // Prepare random
@@ -132,7 +127,7 @@ end:
             player->weapon.damageType == Puncture ? "Puncture" :
             player->weapon.damageType == Impact   ? "Impact"   :
                                                     "Unknown"  ;
-        std::shared_ptr<PopupWindow> victory = PopupWindow::Create({
+        std::shared_ptr<PopupWindow> victoryScreen = PopupWindow::Create({
                         "Congratulations! Challange cleared",
                         "",
             std::format(" {}", player->name),
@@ -148,7 +143,7 @@ end:
             std::format("- Agility:     {}", player->agi),
             std::format("- Endurance:   {}", player->end)},
             {"Exit", "New character"});
-        if(victory->OpenAndGetButton() == 0)
+        if(victoryScreen->OpenAndGetButton() == 0)
             gameState = Stopped;
         else
             gameState = CharacterCreation;

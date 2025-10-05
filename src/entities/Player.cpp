@@ -32,16 +32,6 @@ Player::~Player()
         delete skills[i];
 }
 
-int Player::getDamage() const
-{
-    return weapon.damage;
-}
-
-DamageType Player::getDamageType() const
-{
-    return weapon.damageType;
-}
-
 void Player::applyAttackSkills(
     Attack *attack, const Contender *opponent, int turn) const
 {

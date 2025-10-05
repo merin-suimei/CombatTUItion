@@ -20,8 +20,8 @@ public:
     Player(const std::string name, PlayerClass baseClass);
     ~Player();
 
-    int getDamage() const override;
-    DamageType getDamageType() const override;
+    int getDamage() const override { return weapon.damage; }
+    DamageType getDamageType() const override { return weapon.damageType; }
     void applyAttackSkills(
         Attack *attack, const Contender *opponent, int turn) const override;
     void applyDefenceSkills(
