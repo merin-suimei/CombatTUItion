@@ -2,7 +2,8 @@
 
 #include <random>
 
-#define MAX_TURNS 99
+// Keep even - odd number breaks CombatScreen if Draw occured
+#define MAX_TURNS 50
 
 // Crude early implementation
 EncounterLog Combat::simulateEncounter(
