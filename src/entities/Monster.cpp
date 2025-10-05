@@ -16,16 +16,6 @@ Monster::Monster(std::string name, int hp, int dmg,
     this->reward = reward;
 }
 
-int Monster::getDamage() const
-{
-    return dmg;
-}
-
-DamageType Monster::getDamageType() const
-{
-    return DamageMonster;
-}
-
 void Monster::applyAttackSkills(
     Attack *attack, const Contender *opponent, int turn) const
 {

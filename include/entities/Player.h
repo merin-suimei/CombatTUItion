@@ -3,12 +3,11 @@
 #include "entities/Contender.h"
 #include "entities/Weapon.h"
 #include "skills/Skill.h"
-#include "Attack.h"
-#include <string>
-#include <vector>
 
 #define TOTAL_CLASSES 3
 #define MAX_LEVEL 3
+
+#define MAX_SKILLS 3
 
 enum PlayerClass
 {
@@ -21,8 +20,8 @@ public:
     Player(const std::string name, PlayerClass baseClass);
     ~Player();
 
-    int getDamage() const override;
-    DamageType getDamageType() const override;
+    int getDamage() const override { return weapon.damage; }
+    DamageType getDamageType() const override { return weapon.damageType; }
     void applyAttackSkills(
         Attack *attack, const Contender *opponent, int turn) const override;
     void applyDefenceSkills(
@@ -33,7 +32,9 @@ public:
     std::string ClassToString() const;
 public:
     Weapon weapon;
-    std::vector<Skill*> skills;
+
+    int skillCount = 0;
+    Skill* skills[MAX_SKILLS];
 
     int lvlRouge = 0;
     int lvlWarrior = 0;

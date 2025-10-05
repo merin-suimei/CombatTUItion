@@ -1,8 +1,6 @@
 #pragma once
 
 #include "entities/Contender.h"
-#include "Attack.h"
-#include <string>
 
 enum SkillType
 {
@@ -11,6 +9,11 @@ enum SkillType
 
 class Skill
 {
+protected:
+    Skill(std::string name, std::string description,
+        SkillType type = SkillNone) :
+        name(name), description(description), type(type) {}
+
 public:
     virtual void applySkill(
         Attack *attack, const Contender *self,

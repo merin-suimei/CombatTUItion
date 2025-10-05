@@ -1,13 +1,9 @@
 #pragma once
 
 #include "entities/Contender.h"
-#include "entities/DamageType.h"
 #include "entities/Weapon.h"
 #include "skills/MonsterSkills.h"
 #include "skills/SharedSkills.h"
-#include "skills/Skill.h"
-#include "Attack.h"
-#include <map>
 
 enum MonsterType
 {
@@ -20,8 +16,8 @@ public:
     Monster(std::string name, int hp, int dmg,
         int str, int agi, int end, Weapon reward, Skill *skill);
 
-    int getDamage() const override;
-    DamageType getDamageType() const override;
+    int getDamage() const override { return dmg; }
+    DamageType getDamageType() const override { return DamageMonster; }
     void applyAttackSkills(
         Attack *attack, const Contender *opponent, int turn) const override;
     void applyDefenceSkills(

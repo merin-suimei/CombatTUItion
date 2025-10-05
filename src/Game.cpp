@@ -1,16 +1,13 @@
 #include "Game.h"
 
-#include "entities/Monster.h"
 #include "graphics/ClassSelector.h"
 #include "graphics/CombatScreen.h"
 #include "graphics/PopupWindow.h"
 #include "graphics/TextField.h"
 #include "graphics/WindowManager.h"
 #include "Combat.h"
-#include <curses.h>
 #include <format>
 #include <random>
-#include <string>
 
 #define MAX_ENCOUNTERS 5
 
@@ -49,11 +46,6 @@ void Game::Start()
             break;
         }
     }
-}
-
-GameState Game::getGameState() const
-{
-    return gameState;
 }
 
 void Game::RunChallenge()
@@ -135,7 +127,7 @@ end:
             player->weapon.damageType == Puncture ? "Puncture" :
             player->weapon.damageType == Impact   ? "Impact"   :
                                                     "Unknown"  ;
-        std::shared_ptr<PopupWindow> victory = PopupWindow::Create({
+        std::shared_ptr<PopupWindow> victoryScreen = PopupWindow::Create({
                         "Congratulations! Challange cleared",
                         "",
             std::format(" {}", player->name),
@@ -151,7 +143,7 @@ end:
             std::format("- Agility:     {}", player->agi),
             std::format("- Endurance:   {}", player->end)},
             {"Exit", "New character"});
-        if(victory->OpenAndGetButton() == 0)
+        if(victoryScreen->OpenAndGetButton() == 0)
             gameState = Stopped;
         else
             gameState = CharacterCreation;
@@ -176,7 +168,7 @@ void Game::CreateCharacter()
         std::shared_ptr<PopupWindow> popup = PopupWindow::Create({
             "Current name:", name}, {"Keep", "Change"});
         if (popup->OpenAndGetButton() == 1)
-            changeName == true;
+            changeName = true;
     }
     WindowManager::RedrawAll();
 

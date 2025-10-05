@@ -21,5 +21,5 @@ public:
     ~Game();
 
     void Start();
-    GameState getGameState() const;
+    GameState getGameState() const { return gameState; }
 };

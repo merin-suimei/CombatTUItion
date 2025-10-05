@@ -16,7 +16,7 @@ private:
     WINDOW *window;
     int height;
     int width;
-    std::vector<std::string> text;
+    std::string text;
     std::vector<std::string> buttons;
     std::vector<int> buttonsOffset;
 
