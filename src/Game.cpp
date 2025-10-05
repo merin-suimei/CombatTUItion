@@ -173,7 +173,7 @@ void Game::CreateCharacter()
         std::shared_ptr<PopupWindow> popup = PopupWindow::Create({
             "Current name:", name}, {"Keep", "Change"});
         if (popup->OpenAndGetButton() == 1)
-            changeName == true;
+            changeName = true;
     }
     WindowManager::RedrawAll();
 
