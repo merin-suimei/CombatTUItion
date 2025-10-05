@@ -131,6 +131,8 @@ void Player::LevelUp(PlayerClass playerClass)
     default: // Do nothing
         break;
     }
+
+    hp += end;
 }
 
 std::string Player::ClassToString() const
