@@ -4,7 +4,8 @@
 #include "skills/Skill.h"
 #include <format>
 
-#define DEFAULT_HPAD 3
+#define HPAD_SIZE 3
+#define HPAD std::string(HPAD_SIZE, ' ')
 
 #define COUNTER_H 3
 #define COUNTER_W 12
@@ -55,34 +56,40 @@ CombatScreen::CombatScreen(const EncounterLog log)
     counter = newwin(COUNTER_H, COUNTER_W, 0, (COLS - COUNTER_W)/2);
     box(counter, 0, 0);
 
-    // Format player status
+    // Format and fill player status
     statusTextPlayer = FormatPlayerStats();
     statusPlayer = newwin(STATUS_H, STATUS_W, COUNTER_H + 1, 0);
     damagePlayer = newwin(DAMAGE_H, DAMAGE_W,
         (STATUS_H - DAMAGE_H)/2 + COUNTER_H, STATUS_W + DAMAGE_SPACING);
+    mvwprintw(statusPlayer, STATUS_VPAD, 0, statusTextPlayer.c_str());
+    box(statusPlayer, 0, 0);
 
     // Format and fill player skills
     skillsPlayer = newwin(SKILLS_H, SKILLS_W, COUNTER_H + STATUS_H + 1, 0);
-    for (Skill *skill : log.player->skills)
-    {
-        skillsTextPlayer.push_back(' ' + skill->name);
-        skillsTextPlayer.push_back(skill->description);
-    }
-    PrintMultiline(skillsPlayer, SKILLS_VPAD, DEFAULT_HPAD, skillsTextPlayer);
+    for (size_t i = 0; i < log.player->skillCount; i++)
+        skillsTextPlayer += std::format("{}{}\n{}{}\n",
+            std::string(HPAD_SIZE + 1, ' '), log.player->skills[i]->name,
+            HPAD, log.player->skills[i]->description);
+    mvwprintw(skillsPlayer, SKILLS_VPAD, 0, skillsTextPlayer.c_str());
+    box(skillsPlayer, 0, 0);
 
-    // Format monster status
+    // Format and fill monster status
     statusTextMonster = FormatMonsterStats();
     statusMonster = newwin(STATUS_H, STATUS_W, COUNTER_H + 1, COLS - STATUS_W);
     damageMonster = newwin(DAMAGE_H, DAMAGE_W,
         (STATUS_H - DAMAGE_H)/2 + COUNTER_H,
         COLS - (STATUS_W + DAMAGE_SPACING + DAMAGE_W));
+    mvwprintw(statusMonster, STATUS_VPAD, 0, statusTextMonster.c_str());
+    box(statusMonster, 0, 0);
 
     // Format and fill monster skill
     skillsMonster = newwin(SKILLS_H, SKILLS_W,
         COUNTER_H + STATUS_H + 1, COLS - SKILLS_W);
-    skillsTextMonster = {
-        log.monster->skill->name, log.monster->skill->description};
-    PrintMultiline(skillsMonster, SKILLS_VPAD, DEFAULT_HPAD, skillsTextMonster);
+    skillsTextMonster = std::format("{}{}\n{}{}\n",
+        std::string(HPAD_SIZE + 1, ' '), log.monster->skill->name,
+        HPAD, log.monster->skill->description);
+    mvwprintw(skillsMonster, SKILLS_VPAD, 0, skillsTextMonster.c_str());
+    box(skillsMonster, 0, 0);
 
     // Format and fill controls tip
     controlsText = CONTROL_TIP;
@@ -112,17 +119,11 @@ void CombatScreen::Open()
 {
     // Draw static contents
     refresh();
+    wrefresh(statusPlayer);
     wrefresh(skillsPlayer);
+    wrefresh(statusMonster);
     wrefresh(skillsMonster);
     wrefresh(controls);
-
-    // Draw player's initial stats
-    PrintMultiline(statusPlayer, STATUS_VPAD, DEFAULT_HPAD, statusTextPlayer);
-    wrefresh(statusPlayer);
-
-    // Draw monster's initial stats
-    PrintMultiline(statusMonster, STATUS_VPAD, DEFAULT_HPAD, statusTextMonster);
-    wrefresh(statusMonster);
 
     // Draw dynamic contents
     for (size_t currentTurn = 1; currentTurn <= log.turn; currentTurn++)
@@ -193,8 +194,8 @@ void CombatScreen::Redraw()
     if (getmaxx(statusPlayer) != STATUS_W || getmaxy(statusPlayer) != STATUS_H)
     {
         wresize(statusPlayer, STATUS_H, STATUS_W);
-        PrintMultiline(statusPlayer, STATUS_VPAD, DEFAULT_HPAD,
-            statusTextPlayer);
+        mvwprintw(statusPlayer, STATUS_VPAD, 0, statusTextPlayer.c_str());
+        box(statusPlayer, 0, 0);
     }
     if (getmaxx(damagePlayer) != DAMAGE_W || getmaxy(damagePlayer) != DAMAGE_H)
         wresize(damagePlayer, DAMAGE_H, DAMAGE_W);
@@ -202,15 +203,15 @@ void CombatScreen::Redraw()
     if (getmaxx(skillsPlayer) != SKILLS_W || getmaxy(skillsPlayer) != SKILLS_H)
     {
         wresize(skillsPlayer, SKILLS_H, SKILLS_W);
-        PrintMultiline(skillsPlayer, SKILLS_VPAD, DEFAULT_HPAD,
-            skillsTextPlayer);
+        mvwprintw(skillsPlayer, SKILLS_VPAD, 0, skillsTextPlayer.c_str());
+        box(skillsPlayer, 0, 0);
     }
 
     if (getmaxx(statusMonster) != STATUS_W || getmaxy(statusMonster) != STATUS_H)
     {
         wresize(statusMonster, STATUS_H, STATUS_W);
-        PrintMultiline(statusMonster, STATUS_VPAD, DEFAULT_HPAD,
-            statusTextMonster);
+        mvwprintw(statusMonster, STATUS_VPAD, 0, statusTextMonster.c_str());
+        box(statusMonster, 0, 0);
     }
     if (getmaxx(damageMonster) != DAMAGE_W || getmaxy(damageMonster) != DAMAGE_H)
         wresize(damageMonster, DAMAGE_H, DAMAGE_W);
@@ -218,8 +219,8 @@ void CombatScreen::Redraw()
     if (getmaxx(skillsMonster) != SKILLS_W || getmaxy(skillsMonster) != SKILLS_H)
     {
         wresize(skillsMonster, SKILLS_H, SKILLS_W);
-        PrintMultiline(skillsMonster, SKILLS_VPAD, DEFAULT_HPAD,
-            skillsTextMonster);
+        mvwprintw(skillsMonster, SKILLS_VPAD, 0, skillsTextMonster.c_str());
+        box(skillsMonster, 0, 0);
     }
 
     if (getmaxx(controls) != controlsWidth || getmaxy(controls) != CONTROLS_H)
@@ -241,22 +242,13 @@ void CombatScreen::Redraw()
     wrefresh(controls);
 }
 
-void CombatScreen::PrintMultiline(WINDOW *win, int vpad, int hpad,
-    std::vector<String> text)
-{
-    wmove(win, vpad, 0);
-    for (String line : text)
-        wprintw(win, (String(hpad, ' ') + line + '\n').c_str());
-    box(win, 0, 0);
-}
-
 void CombatScreen::DrawPlayerHalfturn(size_t currentAttack)
 {
     // Player's halfturn
     Attack *playerAttack = &log.attacks.at(currentAttack);
     monsterCurrentHP -= playerAttack->dmg;
 
-    mvwprintw(statusMonster, STATUS_VPAD + MONSTER_HP_LINE - 1, DEFAULT_HPAD,
+    mvwprintw(statusMonster, STATUS_VPAD + MONSTER_HP_LINE - 1, HPAD_SIZE,
         // Extra spaces to overwrite larger numbers
         std::format("HP:       {}/{}   ",
             monsterCurrentHP, log.monster->hp).c_str());
@@ -277,7 +269,7 @@ void CombatScreen::DrawMonsterHalfturn(size_t currentAttack)
     Attack *monsterAttack = &log.attacks.at(currentAttack);
     playerCurrentHP -= monsterAttack->dmg;
 
-    mvwprintw(statusPlayer, STATUS_VPAD + PLAYER_HP_LINE - 1, DEFAULT_HPAD,
+    mvwprintw(statusPlayer, STATUS_VPAD + PLAYER_HP_LINE - 1, HPAD_SIZE,
         // Extra spaces to overwrite larger numbers
         std::format("HP:   {}/{}   ",
             playerCurrentHP, log.player->hp).c_str());
@@ -291,40 +283,45 @@ void CombatScreen::DrawMonsterHalfturn(size_t currentAttack)
     wclear(damagePlayer);
 }
 
-std::vector<String> CombatScreen::FormatPlayerStats()
+String CombatScreen::FormatPlayerStats()
 {
+    const Player *player = log.player;
     std::string damageType =
-        log.player->weapon.damageType == Slash    ? "Slash"    :
-        log.player->weapon.damageType == Puncture ? "Puncture" :
-        log.player->weapon.damageType == Impact   ? "Impact"   :
-                                                    "Unknown"  ;
+        player->weapon.damageType == Slash    ? "Slash"    :
+        player->weapon.damageType == Puncture ? "Puncture" :
+        player->weapon.damageType == Impact   ? "Impact"   :
+                                                "Unknown"  ;
 
-    return std::vector<std::string>{
-        std::format(" {}", log.player->name),
-        std::format("({})", log.player->ClassToString()),
-        std::format("HP:   {}/{}", playerCurrentHP, log.player->hp),
-                    "",
-        std::format("Weapon:   {}", log.player->weapon.name),
-        std::format("- Damage type:   {}", damageType),
-        std::format("- Damage:        {}", log.player->weapon.damage),
-                    "",
-                    "Stats:",
-        std::format("- Strength:    {}", log.player->str),
-        std::format("- Agility:     {}", log.player->agi),
-        std::format("- Endurance:   {}", log.player->end)
-    };
+    return std::format(
+        "{}{}\n"
+        "{}({})\n"
+        "{}HP:   {}/{}\n\n"
+        "{}Weapon:   {}\n"
+        "{}- Damage type:   {}\n"
+        "{}- Damage:        {}\n\n"
+        "{}Stats:\n"
+        "{}- Strength:    {}\n"
+        "{}- Agility:     {}\n"
+        "{}- Endurance:   {}",
+        std::string(HPAD_SIZE + 1, ' '), player->name,
+        HPAD, player->ClassToString(), HPAD, playerCurrentHP, player->hp,
+        HPAD, player->weapon.name,
+        HPAD, damageType, HPAD, player->weapon.damage,
+        HPAD, HPAD, player->str, HPAD, player->agi, HPAD, player->end);
 }
 
-std::vector<String> CombatScreen::FormatMonsterStats()
+String CombatScreen::FormatMonsterStats()
 {
-    return std::vector<std::string>{
-        std::format(" {}", log.monster->name),
-        std::format("HP:       {}/{}", monsterCurrentHP, log.monster->hp),
-        std::format("Damage:   {}", log.monster->dmg),
-                    "",
-                    "Stats:",
-        std::format("- Strength:    {}", log.monster->str),
-        std::format("- Agility:     {}", log.monster->agi),
-        std::format("- Endurance:   {}", log.monster->end)
-    };
+    const Monster *monster = log.monster;
+    return std::format(
+        "{}{}\n"
+        "{}HP:       {}/{}\n"
+        "{}Damage:   {}\n\n"
+        "{}Stats:\n"
+        "{}- Strength:    {}\n"
+        "{}- Agility:     {}\n"
+        "{}- Endurance:   {}\n",
+        std::string(HPAD_SIZE + 1, ' '), monster->name,
+        HPAD, monsterCurrentHP, monster->hp, HPAD, monster->dmg,
+        HPAD, HPAD, monster->str, HPAD, monster->agi, HPAD,  monster->end);
 }

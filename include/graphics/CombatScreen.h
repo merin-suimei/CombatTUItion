@@ -9,13 +9,11 @@ class CombatScreen : public Redrawable
 {
 private:
     CombatScreen(const EncounterLog log);
-    void PrintMultiline(WINDOW *win, int vpad, int hpad,
-        std::vector<std::string> text);
 
     void DrawPlayerHalfturn(size_t currentTurn);
     void DrawMonsterHalfturn(size_t currentTurn);
-    std::vector<std::string> FormatPlayerStats();
-    std::vector<std::string> FormatMonsterStats();
+    std::string FormatPlayerStats();
+    std::string FormatMonsterStats();
 private:
     EncounterLog log;
 
@@ -24,17 +22,17 @@ private:
 
     WINDOW *statusPlayer;
     int playerCurrentHP;
-    std::vector<std::string> statusTextPlayer;
+    std::string statusTextPlayer;
     WINDOW *damagePlayer;
     WINDOW *skillsPlayer;
-    std::vector<std::string> skillsTextPlayer;
+    std::string skillsTextPlayer;
 
     WINDOW *statusMonster;
     int monsterCurrentHP;
-    std::vector<std::string> statusTextMonster;
+    std::string statusTextMonster;
     WINDOW *damageMonster;
     WINDOW *skillsMonster;
-    std::vector<std::string> skillsTextMonster;
+    std::string skillsTextMonster;
 
     WINDOW *controls;
     std::string controlsText;

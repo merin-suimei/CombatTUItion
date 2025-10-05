@@ -27,7 +27,8 @@ PopupWindow::PopupWindow(
     const std::vector<String> text,
     const std::vector<String> buttons)
 {
-    this->text = text;
+    for (String line : text)
+        this->text += String(HORIZONTAL_PAD, ' ') + line + '\n';
 
     // Format buttons
     for (String button : buttons)
@@ -56,9 +57,7 @@ PopupWindow::PopupWindow(
     window = newwin(height, width,
         (LINES - height) / 2,
         (COLS - width) / 2);
-    wmove(window, VERTICAL_PAD, 0);
-    for (String line : text)
-        wprintw(window, (String(HORIZONTAL_PAD, ' ') + line + '\n').c_str());
+    mvwprintw(window, VERTICAL_PAD, 0, this->text.c_str());
     box(window, 0, 0);
 }
 
@@ -139,9 +138,7 @@ void PopupWindow::Redraw()
         getmaxy(window) != height)
     {
         wresize(window, height, width);
-        wmove(window, VERTICAL_PAD, 0);
-        for (String line : text)
-            wprintw(window, (String(HORIZONTAL_PAD, ' ')+line+'\n').c_str());
+        mvwprintw(window, VERTICAL_PAD, 0, this->text.c_str());
         box(window, 0, 0);
     }
 

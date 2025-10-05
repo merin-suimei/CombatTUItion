@@ -28,8 +28,8 @@ Player::Player(const std::string name, PlayerClass baseClass)
 
 Player::~Player()
 {
-    for (Skill *skill : skills)
-        delete skill;
+    for (size_t i = 0; i < skillCount; i++)
+        delete skills[i];
 }
 
 int Player::getDamage() const
@@ -45,17 +45,17 @@ DamageType Player::getDamageType() const
 void Player::applyAttackSkills(
     Attack *attack, const Contender *opponent, int turn) const
 {
-    for (Skill *skill : skills)
-        if (skill->type == Offensive)
-            skill->applySkill(attack, this, opponent, turn);
+    for (size_t i = 0; i < skillCount; i++)
+        if (skills[i]->type == Offensive)
+            skills[i]->applySkill(attack, this, opponent, turn);
 }
 
 void Player::applyDefenceSkills(
     Attack *attack, const Contender *opponent, int turn) const
 {
-    for (Skill *skill : skills)
-        if (skill->type == Defensive)
-            skill->applySkill(attack, this, opponent, turn);
+    for (size_t i = 0; i < skillCount; i++)
+        if (skills[i]->type == Defensive)
+            skills[i]->applySkill(attack, this, opponent, turn);
 }
 
 int Player::getTotalLevel() const
@@ -76,13 +76,13 @@ void Player::LevelUp(PlayerClass playerClass)
         switch (lvlRouge)
         {
         case 1:
-            skills.push_back(new SneakAttack());
+            skills[skillCount++] = new SneakAttack();
             break;
         case 2:
             agi++;
             break;
         case 3:
-            skills.push_back(new Poison());
+            skills[skillCount++] = new Poison();
             break;
 
         default: // Do nothing
@@ -95,10 +95,10 @@ void Player::LevelUp(PlayerClass playerClass)
         switch (lvlWarrior)
         {
         case 1:
-            skills.push_back(new CallToArms());
+            skills[skillCount++] = new CallToArms();
             break;
         case 2:
-            skills.push_back(new Shield());
+            skills[skillCount++] = new Shield();
             break;
         case 3:
             str++;
@@ -114,10 +114,10 @@ void Player::LevelUp(PlayerClass playerClass)
         switch (lvlBarbarian)
         {
         case 1:
-            skills.push_back(new Rage());
+            skills[skillCount++] = new Rage();
             break;
         case 2:
-            skills.push_back(new StoneSkin());
+            skills[skillCount++] = new StoneSkin();
             break;
         case 3:
             end++;

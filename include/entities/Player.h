@@ -3,10 +3,11 @@
 #include "entities/Contender.h"
 #include "entities/Weapon.h"
 #include "skills/Skill.h"
-#include <vector>
 
 #define TOTAL_CLASSES 3
 #define MAX_LEVEL 3
+
+#define MAX_SKILLS 3
 
 enum PlayerClass
 {
@@ -31,7 +32,9 @@ public:
     std::string ClassToString() const;
 public:
     Weapon weapon;
-    std::vector<Skill*> skills;
+
+    int skillCount = 0;
+    Skill* skills[MAX_SKILLS];
 
     int lvlRouge = 0;
     int lvlWarrior = 0;
