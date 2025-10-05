@@ -9,7 +9,8 @@ public:
         Attack *attack, const Contender *self,
         const Contender *opponent, int turn) const override;
 public:
-    Brittle();
+    Brittle() : Skill("Brittle",
+        "Double damage from Impact", Defensive) {}
 };
 
 class Amorphous : public Skill
@@ -19,7 +20,8 @@ public:
         Attack *attack, const Contender *self,
         const Contender *opponent, int turn) const override;
 public:
-    Amorphous();
+    Amorphous() : Skill("Amorphous",
+        "Ignore Slash damage", Defensive) {}
 };
 
 class DragonBreath : public Skill
@@ -29,5 +31,6 @@ public:
         Attack *attack, const Contender *self,
         const Contender *opponent, int turn) const override;
 public:
-    DragonBreath();
+    DragonBreath() : Skill("Dragon Breath",
+        "Deals 3 damage every 3 turns", Offensive) {}
 };
