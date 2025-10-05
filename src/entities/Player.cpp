@@ -8,13 +8,6 @@ Player::Player(const std::string name, PlayerClass baseClass)
 {
     this->name = name;
 
-    hp = 0;
-    weapon = weaponsTable.at(
-        baseClass == Rouge   ? Dagger :
-        baseClass == Warrior ? Sword  :
-                               Club  );
-    LevelUp(baseClass);
-
     // Prepare random
     std::random_device rd;
     std::mt19937 gen(rd());
@@ -24,6 +17,13 @@ Player::Player(const std::string name, PlayerClass baseClass)
     str = distrib(gen);
     agi = distrib(gen);
     end = distrib(gen);
+
+    hp = 0;
+    weapon = weaponsTable.at(
+        baseClass == Rouge   ? Dagger :
+        baseClass == Warrior ? Sword  :
+                               Club  );
+    LevelUp(baseClass);
 }
 
 Player::~Player()
