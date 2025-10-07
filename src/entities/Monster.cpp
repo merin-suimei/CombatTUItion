@@ -1,8 +1,8 @@
 #include "entities/Monster.h"
 
 //Temp before lookup table
-Monster::Monster(std::string name, int hp, int dmg,
-    int str, int agi, int end, Weapon reward, Skill *skill)
+Monster::Monster(const std::string &name, int hp, int dmg,
+    int str, int agi, int end, const Weapon &reward, Skill *skill)
 {
     this->name = name;
     this->hp = hp;

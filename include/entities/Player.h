@@ -22,7 +22,7 @@ private:
     void ApplyBarbarianBonus();
 
 public:
-    Player(const std::string name, PlayerClass baseClass);
+    Player(const std::string &name, PlayerClass baseClass);
     ~Player();
 
     int getDamage() const override { return weapon.damage; }

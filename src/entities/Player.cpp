@@ -4,7 +4,7 @@
 #include "skills/SharedSkills.h"
 #include <random>
 
-Player::Player(const std::string name, PlayerClass baseClass)
+Player::Player(const std::string &name, PlayerClass baseClass)
 {
     this->name = name;
 

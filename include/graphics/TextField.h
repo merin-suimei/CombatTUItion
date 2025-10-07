@@ -8,14 +8,14 @@
 class TextField : public Redrawable
 {
 private:
-    TextField(std::string text);
+    TextField(const std::string &text);
 private:
     WINDOW *window;
     std::string text;
     WINDOW *inputField;
 
 public:
-    static std::shared_ptr<TextField> Create(std::string text);
+    static std::shared_ptr<TextField> Create(const std::string &text);
     ~TextField();
 
     void Redraw() override;

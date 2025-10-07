@@ -10,8 +10,8 @@ class PopupWindow : public Redrawable
 {
 private:
     PopupWindow(
-        const std::vector<std::string> text,
-        const std::vector<std::string> buttons);
+        const std::vector<std::string> &text,
+        const std::vector<std::string> &buttons);
 private:
     WINDOW *window;
     int height;
@@ -22,8 +22,8 @@ private:
 
 public:
     static std::shared_ptr<PopupWindow> Create(
-        const std::vector<std::string> text,
-        const std::vector<std::string> buttons);
+        const std::vector<std::string> &text,
+        const std::vector<std::string> &buttons);
     ~PopupWindow();
 
     int OpenAndGetButton();
