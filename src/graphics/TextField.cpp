@@ -51,8 +51,10 @@ std::string TextField::OpenAndGetInput()
     wrefresh(window);
 
     // Get input string
-    char input[INPUT_LEN];
-    wgetstr(inputField, input);
+    char input[INPUT_LEN] = {0, };
+    while (input[0] == '\0')
+        if (wgetnstr(inputField, input, INPUT_LEN) == KEY_RESIZE)
+            WindowManager::RedrawAll();
 
     return input;
 }
