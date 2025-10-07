@@ -185,51 +185,25 @@ void CombatScreen::Redraw()
     mvwin(controls, LINES - CONTROLS_H, (COLS - controlsWidth)/2);
 
     // Restore after cut off by small screen
-    if (getmaxx(counter) != COUNTER_W || getmaxy(counter) != COUNTER_H)
-    {
-        wresize(counter, COUNTER_H, COUNTER_W);
-        mvwprintw(counter, 1, COUNTER_HPAD, counterText.c_str());
-        box(counter, 0, 0);
-    }
+    RestoreWindow(counter, COUNTER_H, COUNTER_W,
+        1, COUNTER_HPAD, counterText.c_str());
 
-    if (getmaxx(statusPlayer) != STATUS_W || getmaxy(statusPlayer) != STATUS_H)
-    {
-        wresize(statusPlayer, STATUS_H, STATUS_W);
-        mvwprintw(statusPlayer, STATUS_VPAD, 0, statusTextPlayer.c_str());
-        box(statusPlayer, 0, 0);
-    }
+    RestoreWindow(statusPlayer, STATUS_H, STATUS_W,
+        STATUS_VPAD, 0, statusTextPlayer.c_str());
     if (getmaxx(damagePlayer) != DAMAGE_W || getmaxy(damagePlayer) != DAMAGE_H)
         wresize(damagePlayer, DAMAGE_H, DAMAGE_W);
+    RestoreWindow(skillsPlayer, SKILLS_H, SKILLS_W,
+        SKILLS_VPAD, 0, skillsTextPlayer.c_str());
 
-    if (getmaxx(skillsPlayer) != SKILLS_W || getmaxy(skillsPlayer) != SKILLS_H)
-    {
-        wresize(skillsPlayer, SKILLS_H, SKILLS_W);
-        mvwprintw(skillsPlayer, SKILLS_VPAD, 0, skillsTextPlayer.c_str());
-        box(skillsPlayer, 0, 0);
-    }
-
-    if (getmaxx(statusMonster) != STATUS_W || getmaxy(statusMonster) != STATUS_H)
-    {
-        wresize(statusMonster, STATUS_H, STATUS_W);
-        mvwprintw(statusMonster, STATUS_VPAD, 0, statusTextMonster.c_str());
-        box(statusMonster, 0, 0);
-    }
+    RestoreWindow(statusMonster, STATUS_H, STATUS_W,
+        STATUS_VPAD, 0, statusTextMonster.c_str());
     if (getmaxx(damageMonster) != DAMAGE_W || getmaxy(damageMonster) != DAMAGE_H)
         wresize(damageMonster, DAMAGE_H, DAMAGE_W);
+    RestoreWindow(skillsMonster, SKILLS_H, SKILLS_W,
+        SKILLS_VPAD, 0, skillsTextMonster.c_str());
 
-    if (getmaxx(skillsMonster) != SKILLS_W || getmaxy(skillsMonster) != SKILLS_H)
-    {
-        wresize(skillsMonster, SKILLS_H, SKILLS_W);
-        mvwprintw(skillsMonster, SKILLS_VPAD, 0, skillsTextMonster.c_str());
-        box(skillsMonster, 0, 0);
-    }
-
-    if (getmaxx(controls) != controlsWidth || getmaxy(controls) != CONTROLS_H)
-    {
-        wresize(controls, CONTROLS_H, controlsWidth);
-        mvwprintw(controls, 1, CONTROLS_HPAD, controlsText.c_str());
-        box(controls, 0, 0);
-    }
+    RestoreWindow(controls, CONTROLS_H, controlsWidth,
+        1, CONTROLS_HPAD, controlsText.c_str());
 
     // Draw everything
     wrefresh(counter);
@@ -241,6 +215,17 @@ void CombatScreen::Redraw()
     wrefresh(skillsMonster);
 
     wrefresh(controls);
+}
+
+void CombatScreen::RestoreWindow(WINDOW *window, int height, int width,
+    int textY, int textX, const char *text)
+{
+    if (getmaxy(window) != height || getmaxx(window) != width)
+    {
+        wresize(window, height, width);
+        mvwprintw(window, textY, textX, text);
+        box(window, 0, 0);
+    }
 }
 
 void CombatScreen::DrawPlayerHalfturn(size_t currentAttack)

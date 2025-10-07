@@ -12,6 +12,10 @@ private:
 
     void DrawPlayerHalfturn(size_t currentTurn);
     void DrawMonsterHalfturn(size_t currentTurn);
+
+    void RestoreWindow(WINDOW *window, int height, int width,
+        int textY, int textX, const char *text);
+
     std::string FormatPlayerStats();
     std::string FormatMonsterStats();
 private:
