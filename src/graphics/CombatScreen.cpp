@@ -28,7 +28,7 @@
 
 #define CONTROLS_H 3
 #define CONTROLS_HPAD 2
-#define CONTROL_TIP "Press any key to speed up turn"
+#define CONTROL_TIP "Press or hold any key to speed up turn"
 
 #define HALFTURN_DELAY_MS 1000
 #define TURN_DELAY_MS 1500
@@ -121,6 +121,7 @@ void CombatScreen::Open()
     refresh();
     wrefresh(statusPlayer);
     wrefresh(skillsPlayer);
+
     wrefresh(statusMonster);
     wrefresh(skillsMonster);
     wrefresh(controls);
@@ -129,7 +130,7 @@ void CombatScreen::Open()
     for (size_t currentTurn = 1; currentTurn <= log.turn; currentTurn++)
     {
         // Draw turn counter
-        counterText = std::format("Turn: {}", currentTurn).c_str();
+        counterText = std::format("Turn: {}", currentTurn);
         mvwprintw(counter, 1, COUNTER_HPAD, counterText.c_str());
         wrefresh(counter);
 
@@ -145,7 +146,7 @@ void CombatScreen::Open()
         wrefresh(damageMonster);
 
         // Check if next halfturn exists
-        if ((currentTurn-1)*2 + 1 >= log.attacks.size())
+        if ((currentTurn - 1)*2 + 1 >= log.attacks.size())
             break;
 
         if (log.initiative == MonsterFirst)
@@ -177,11 +178,11 @@ void CombatScreen::Redraw()
     mvwin(skillsPlayer, COUNTER_H + STATUS_H + 1, 0);
 
     mvwin(statusMonster, COUNTER_H + 1, COLS - STATUS_W);
-    mvwin(damageMonster,  (STATUS_H - DAMAGE_H)/2 + COUNTER_H,
-        COLS-(STATUS_W+DAMAGE_SPACING+DAMAGE_W));
+    mvwin(damageMonster, (STATUS_H - DAMAGE_H)/2 + COUNTER_H,
+        COLS - (STATUS_W + DAMAGE_SPACING + DAMAGE_W));
     mvwin(skillsMonster, COUNTER_H + STATUS_H + 1, COLS - SKILLS_W);
 
-    mvwin(controls, LINES-CONTROLS_H, (COLS - controlsWidth)/2);
+    mvwin(controls, LINES - CONTROLS_H, (COLS - controlsWidth)/2);
 
     // Restore after cut off by small screen
     if (getmaxx(counter) != COUNTER_W || getmaxy(counter) != COUNTER_H)
@@ -250,8 +251,7 @@ void CombatScreen::DrawPlayerHalfturn(size_t currentAttack)
 
     mvwprintw(statusMonster, STATUS_VPAD + MONSTER_HP_LINE - 1, HPAD_SIZE,
         // Extra spaces to overwrite larger numbers
-        std::format("HP:       {}/{}   ",
-            monsterCurrentHP, log.monster->hp).c_str());
+        std::format("HP:       {}/{}   ", monsterCurrentHP, log.monster->hp).c_str());
     box(statusMonster, 0, 0);
     wrefresh(statusMonster);
 
@@ -271,8 +271,7 @@ void CombatScreen::DrawMonsterHalfturn(size_t currentAttack)
 
     mvwprintw(statusPlayer, STATUS_VPAD + PLAYER_HP_LINE - 1, HPAD_SIZE,
         // Extra spaces to overwrite larger numbers
-        std::format("HP:   {}/{}   ",
-            playerCurrentHP, log.player->hp).c_str());
+        std::format("HP:   {}/{}   ", playerCurrentHP, log.player->hp).c_str());
     box(statusPlayer, 0, 0);
     wrefresh(statusPlayer);
 
