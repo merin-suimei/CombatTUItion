@@ -63,59 +63,17 @@ void Player::LevelUp(PlayerClass playerClass)
     case Rouge:
         lvlRouge++;
         hp += 4;
-        switch (lvlRouge)
-        {
-        case 1:
-            skills[skillCount++] = new SneakAttack();
-            break;
-        case 2:
-            agi++;
-            break;
-        case 3:
-            skills[skillCount++] = new Poison();
-            break;
-
-        default: // Do nothing
-            break;
-        }
+        ApplyRougeBonus();
         break;
     case Warrior:
         lvlWarrior++;
         hp += 5;
-        switch (lvlWarrior)
-        {
-        case 1:
-            skills[skillCount++] = new CallToArms();
-            break;
-        case 2:
-            skills[skillCount++] = new Shield();
-            break;
-        case 3:
-            str++;
-            break;
-
-        default: // Do nothing
-            break;
-        }
+        ApplyWarriorBonus();
         break;
     case Barbarian:
         lvlBarbarian++;
         hp += 6;
-        switch (lvlBarbarian)
-        {
-        case 1:
-            skills[skillCount++] = new Rage();
-            break;
-        case 2:
-            skills[skillCount++] = new StoneSkin();
-            break;
-        case 3:
-            end++;
-            break;
-
-        default: // Do nothing
-            break;
-        }
+        ApplyBarbarianBonus();
         break;
 
     default: // Do nothing
@@ -123,6 +81,63 @@ void Player::LevelUp(PlayerClass playerClass)
     }
 
     hp += end;
+}
+
+void Player::ApplyRougeBonus()
+{
+    switch (lvlRouge)
+    {
+    case 1:
+        skills[skillCount++] = new SneakAttack();
+        break;
+    case 2:
+        agi++;
+        break;
+    case 3:
+        skills[skillCount++] = new Poison();
+        break;
+
+    default: // Do nothing
+        break;
+    }
+}
+
+void Player::ApplyWarriorBonus()
+{
+    switch (lvlWarrior)
+    {
+    case 1:
+        skills[skillCount++] = new CallToArms();
+        break;
+    case 2:
+        skills[skillCount++] = new Shield();
+        break;
+    case 3:
+        str++;
+        break;
+
+    default: // Do nothing
+        break;
+    }
+}
+
+void Player::ApplyBarbarianBonus()
+{
+    switch (lvlBarbarian)
+    {
+    case 1:
+        skills[skillCount++] = new Rage();
+        break;
+    case 2:
+        skills[skillCount++] = new StoneSkin();
+        break;
+    case 3:
+        end++;
+        break;
+
+    default: // Do nothing
+        break;
+    }
 }
 
 std::string Player::ClassToString() const
