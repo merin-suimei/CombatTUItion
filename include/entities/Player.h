@@ -16,8 +16,13 @@ enum PlayerClass
 
 class Player : public Contender
 {
+private:
+    void ApplyRougeBonus();
+    void ApplyWarriorBonus();
+    void ApplyBarbarianBonus();
+
 public:
-    Player(const std::string name, PlayerClass baseClass);
+    Player(const std::string &name, PlayerClass baseClass);
     ~Player();
 
     int getDamage() const override { return weapon.damage; }

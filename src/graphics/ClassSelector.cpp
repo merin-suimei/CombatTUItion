@@ -78,6 +78,7 @@ ClassSelector::ClassSelector(int lvlRouge, int lvlWarrior, int lvlBarbarian)
 ClassSelector::~ClassSelector()
 {
     delwin(window);
+
     delwin(rouge);
     delwin(warrior);
     delwin(barbarian);
@@ -93,7 +94,6 @@ PlayerClass ClassSelector::OpenAndGetClass()
     {
         // Redraw buttons
         for (size_t i = 0; i < TOTAL_CLASSES; i++)
-        {
             if (i == activeButton)
             {
                 wattron(window, A_REVERSE);
@@ -105,12 +105,9 @@ PlayerClass ClassSelector::OpenAndGetClass()
                 wattroff(window, A_REVERSE);
             }
             else
-            {
                 mvwprintw(window, HEIGHT-1, i*(SUBWINDOW_W + 1) + BUTTON_OFFSET,
                     BUTTON_TEXT);
-            }
-        }
-        
+
         // Refresh (using side effect of wgetch()) and read input
         wrefresh(window);
         wrefresh(rouge);
@@ -136,7 +133,7 @@ PlayerClass ClassSelector::OpenAndGetClass()
             WindowManager::RedrawAll();
             break;
 
-        default:
+        default: // Do nothing
             break;
         }
     }
@@ -179,31 +176,28 @@ void ClassSelector::Redraw()
     // Restore after cut off by small screen
     if (getmaxx(window) != WIDTH || getmaxy(window) != HEIGHT)
     {
-        wclear(window);
         wresize(window, HEIGHT, WIDTH);
         box(window, 0, 0);
     }
     if (getmaxx(rouge) != SUBWINDOW_W || getmaxy(rouge) != HEIGHT - 2)
     {
-        wclear(rouge);
         wresize(rouge, HEIGHT - 2, SUBWINDOW_W);
         wprintw(rouge, rougeText.c_str());
     }
     if (getmaxx(warrior) != SUBWINDOW_W || getmaxy(warrior) != HEIGHT - 2)
     {
-        wclear(warrior);
         wresize(warrior, HEIGHT - 2, SUBWINDOW_W);
         wprintw(warrior, warriorText.c_str());
     }
     if (getmaxx(barbarian) != SUBWINDOW_W || getmaxy(barbarian) != HEIGHT - 2)
     {
-        wclear(barbarian);
         wresize(barbarian, HEIGHT - 2, SUBWINDOW_W);
         wprintw(barbarian, barbarianText.c_str());
     }
 
     // Draw
     wrefresh(window);
+
     wrefresh(rouge);
     wrefresh(warrior);
     wrefresh(barbarian);

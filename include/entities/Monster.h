@@ -13,8 +13,8 @@ enum MonsterType
 class Monster : public Contender
 {
 public:
-    Monster(std::string name, int hp, int dmg,
-        int str, int agi, int end, Weapon reward, Skill *skill);
+    Monster(const std::string &name, int hp, int dmg,
+        int str, int agi, int end, const Weapon &reward, Skill *skill);
 
     int getDamage() const override { return dmg; }
     DamageType getDamageType() const override { return DamageMonster; }

@@ -9,6 +9,7 @@ class ClassSelector : public Redrawable
 {
 private:
     ClassSelector(int lvlRouge, int lvlWarrior, int lvlBarbarian);
+private:
     const std::string rougeBonuses[MAX_LEVEL] = {
         "[Skill] Sneak Attack\n"
         " +1 damage if your Agility\nhigher than opponents'",
@@ -27,7 +28,7 @@ private:
         "[Skill] Stone Skin\n"
         " Ignore 1 damage for every\nEndurance point",
         "[Stat] +1 end"};
-private:
+
     WINDOW *window;
 
     WINDOW *rouge;

@@ -15,8 +15,8 @@
 using String = std::string;
 
 std::shared_ptr<PopupWindow> PopupWindow::Create(
-    const std::vector<String> text,
-    const std::vector<String> buttons)
+    const std::vector<String> &text,
+    const std::vector<String> &buttons)
 {
     std::shared_ptr<PopupWindow> ptr(new PopupWindow(text, buttons));
     WindowManager::AddWindow(ptr);
@@ -24,8 +24,8 @@ std::shared_ptr<PopupWindow> PopupWindow::Create(
 }
 
 PopupWindow::PopupWindow(
-    const std::vector<String> text,
-    const std::vector<String> buttons)
+    const std::vector<String> &text,
+    const std::vector<String> &buttons)
 {
     for (String line : text)
         this->text += String(HORIZONTAL_PAD, ' ') + line + '\n';

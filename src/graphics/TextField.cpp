@@ -9,14 +9,14 @@
 #define INPUT_LEN 32
 #define HPAD 3
 
-std::shared_ptr<TextField> TextField::Create(std::string text)
+std::shared_ptr<TextField> TextField::Create(const std::string &text)
 {
     std::shared_ptr<TextField> ptr(new TextField(text));
     WindowManager::AddWindow(ptr);
     return ptr;
 }
 
-TextField::TextField(std::string text)
+TextField::TextField(const std::string &text)
 {
     this->text = text;
 
@@ -51,8 +51,10 @@ std::string TextField::OpenAndGetInput()
     wrefresh(window);
 
     // Get input string
-    char input[INPUT_LEN];
-    wgetstr(inputField, input);
+    char input[INPUT_LEN] = {0, };
+    while (input[0] == '\0')
+        if (wgetnstr(inputField, input, INPUT_LEN) == KEY_RESIZE)
+            WindowManager::RedrawAll();
 
     return input;
 }
